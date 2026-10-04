@@ -290,10 +290,11 @@ def documentation(root: Path) -> dict:
     text = docs.get("EXPERIMENTS", "")
     headings = list(re.finditer(r"^## (EXP-\d{3})[^\n]*", text, re.M))
     for i, match in enumerate(headings):
-        experiments.append({"id": match.group(1), "title": match.group(0)[3:], "status": "complete",
+        experiments.append({"id": match.group(1), "title": match.group(0)[3:],
+                            "status": "registered — evidence pending" if match.group(1) == "EXP-005" else "complete",
                             "body": text[match.end():headings[i+1].start() if i+1 < len(headings) else None].strip(),
                             "doc": "EXPERIMENTS"})
-    return {"documents": docs, "research_log": list(reversed(log)), "roadmap": roadmap,
+    return {"documents": docs, "research_log": sorted(log,key=lambda row:row["date"],reverse=True), "roadmap": roadmap,
             "experiments": experiments, "last_research_update": max((row["date"] for row in log), default=None)}
 
 
@@ -310,7 +311,10 @@ def build_dashboard(root: Path = ROOT, output: Path | None = None, *, as_of: str
         archive = export_archive(root, config, as_of)
         audit = export_audit(root)
     docs = documentation(root)
+    from src.prospective import operational_summary
+    prospective = operational_summary(root / "data/paper_archive", as_of=as_of) if (root / "config/exp005.json").exists() else None
     data = {"schema_version": 1, "as_of": as_of, "exp001": exp001, "exp002": exp002,
+            "prospective": prospective,
             "exp004": export_exp004(root, exp002), "diagnosis": export_diagnosis(root),
             "hypotheses": hypothesis_registry(root),
             "archive": archive, "audit": audit, "feature_catalog": feature_catalog(), **docs}

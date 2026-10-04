@@ -183,3 +183,16 @@ Open **http://127.0.0.1:5173**. The offline exporter reads preserved local resea
 artifacts; a fresh clone without them shows explicit unavailable states and the
 canonical documentation. No demonstration statistics replace missing data.
 See [frontend operation and verification](frontend/README.md).
+
+EXP-005 prioritizes fresh evidence. Read [the protocol](docs/EXP005_PROTOCOL.md)
+and [daily commands](docs/PAPER_ARCHIVE.md). After 00:15 New York time following
+a completed session and before the next open:
+
+```powershell
+.\.venv\Scripts\python.exe -W error -m scripts.collect_prospective
+.\.venv\Scripts\python.exe -W error -m scripts.attach_prospective_outcomes
+```
+
+**Prospective Validation** shows coverage and pending outcomes. Returns stay
+sealed until registered review gates pass. First signal session: 2026-10-05.
+Paper research only; no orders are placed.

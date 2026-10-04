@@ -23,6 +23,7 @@ test('real artifacts render every view without browser errors', async ({ page })
     ['exit-research', 'How Should We Exit a Dip?'],
     ['research-diagnosis', "Why isn't V1 stronger yet?"],
     ['hypotheses', 'What deserves a fresh test?'],
+    ['prospective-validation', 'Prospective Validation'],
     ['experiments', 'What did we learn?'],
     ['paper-archive', 'Paper-signal archive'],
     ['data-quality', 'Small discrepancies. Real research consequences.'],

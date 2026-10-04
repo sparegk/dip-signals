@@ -9,7 +9,7 @@ import pandas as pd
 
 from src.backtest import compute_forward_outcomes, simulate_barrier_trades
 from src.data import load_parquet
-from src.paper_archive import load_protocol
+from src.paper_archive import code_identity, load_protocol
 from src.preservation import canonical_json, digest, get_object, read_record, safe_key, write_record
 from src.prospective import PROTOCOL_HASH, protocol, verify_enrollment
 from src.sessions import session_facts, utc, utc_now
@@ -81,6 +81,12 @@ def attach_outcome(root: Path, run_id: str, ticker: str, inputs: dict, *, versio
     if set(inputs) != {ticker, benchmark}:
         raise ValueError("Outcome needs exact stock and benchmark vintages")
     attached = clock()
+    parent_hash = None
+    if corrects:
+        parent = verify_outcome(root,path.parent/(corrects+".json"))
+        if utc(attached) <= utc(parent["attached_at"]):
+            raise ValueError("New outcome version must follow parent timestamp")
+        parent_hash = digest(canonical_json(parent))
     frames = {}
     for t, item in inputs.items():
         if item["status"] != "available" or item.get("input_kind") != "new_provider_vintage":
@@ -99,6 +105,7 @@ def attach_outcome(root: Path, run_id: str, ticker: str, inputs: dict, *, versio
     revised_close = float(frames[ticker].loc[frames[ticker].timestamp.eq(pd.Timestamp(decision["session"])), "close"].iloc[0])
     payload = {"schema_version": 1, "run_id": run_id, "ticker": ticker, "version": version,
                "corrects": corrects, "reason": reason, "attached_at": attached,
+               "parent_outcome_sha256":parent_hash,"code":code_identity(),
                "protocol_sha256": PROTOCOL_HASH, "decision_sha256": digest(canonical_json(enrollment["decision"])),
                "inputs": inputs, "signal_close_revision": revised_close / original_close - 1, **values}
     write_record(path, payload)
@@ -112,6 +119,12 @@ def verify_outcome(root: Path, path: Path) -> dict:
         raise ValueError("Outcome linkage mismatch")
     if enrollment["receipt"]["classifications"].get(payload["ticker"]) != "prospective":
         raise ValueError("Outcome linked to retrospective decision")
+    if path.stem != payload["version"] or path.parent.name != payload["ticker"] or path.parent.parent.name != payload["run_id"]:
+        raise ValueError("Outcome identity mismatch")
+    if payload["corrects"]:
+        parent = read_record(path.parent / (safe_key(payload["corrects"])+".json"))
+        if payload["parent_outcome_sha256"] != digest(canonical_json(parent)) or utc(payload["attached_at"]) <= utc(parent["attached_at"]):
+            raise ValueError("Outcome correction linkage mismatch")
     for item in payload["inputs"].values():
         for key in ("validated_sha256", "raw_sha256"):
             if key in item:
@@ -183,6 +196,15 @@ def review_report(root: Path, *, clock: Callable[[], str] = utc_now) -> dict:
                 subset = subset.copy(); subset[date] = pd.to_datetime(subset[date])
             metrics = trade_metrics(subset)
             metrics.update(fifth_percentile=float(subset.net_return.quantile(.05)),worst_loss=float(subset.net_return.min()))
+            drawdowns = []
+            for _, ticker_trades in subset.groupby("ticker"):
+                kept, last_exit = [], pd.Timestamp.min
+                for index, trade in ticker_trades.sort_values("entry_timestamp").iterrows():
+                    if trade.entry_timestamp > last_exit:
+                        kept.append(index); last_exit = trade.exit_timestamp
+                if kept:
+                    drawdowns.append(trade_metrics(ticker_trades.loc[kept].sort_values("entry_timestamp"),sequential=True)["maximum_drawdown"])
+            metrics["worst_ticker_sequential_drawdown"] = min(drawdowns) if drawdowns else np.nan
             results.append({"policy":key[0],"grouping":column or "all","group":key[1] if column else "all", **metrics})
     forwards = pd.DataFrame(forward)
     horizon_summary = []
@@ -197,11 +219,23 @@ def review_report(root: Path, *, clock: Callable[[], str] = utc_now) -> dict:
     if not frame.empty:
         pivot = frame.pivot(index=["session","ticker"],columns="policy",values="net_return")
         difference = pivot.ten_bar_hold-pivot.historical_v1_control
-        paired_ev = summarize_returns(difference,dates= pivot.index.get_level_values("session"),block_size=20,seed=42)
+        paired_ev = summarize_returns(difference.to_numpy(),dates=pd.to_datetime(pivot.index.get_level_values("session")),block_size=20,seed=42)
     report = {"reviewed_at":now,"protocol_sha256":PROTOCOL_HASH,"completed_events":summary["completed_outcomes"],
+              "gate_coverage":{"scheduled_sessions":summary["scheduled_sessions"],"complete_runs":summary["complete_runs"]},
               "milestones_crossed":[n for n in protocol()["review_event_milestones"] if summary["completed_outcomes"]>=n],
               "comparison":json_rows(pd.DataFrame(results)),"forward":json_rows(pd.DataFrame(horizon_summary)),
               "paired_ev":json_rows(pd.DataFrame([paired_ev]))[0] if paired_ev else {},
               "outcome_hashes":[digest(canonical_json(o)) for o in selected]}
     write_record(target,report)
+    return report
+
+
+def read_review(root: Path, path: Path) -> dict:
+    """Verify a previously gated review; exports cannot open a new review."""
+    report = read_record(path)
+    if report["protocol_sha256"] != PROTOCOL_HASH or not review_allowed(report["gate_coverage"],now=report["reviewed_at"]):
+        raise ValueError("Invalid registered review")
+    available = {digest(canonical_json(read_record(p))) for p in (root/"exp005/outcomes").glob("*/*/*.json")}
+    if not set(report["outcome_hashes"]).issubset(available):
+        raise ValueError("Review outcome linkage missing")
     return report

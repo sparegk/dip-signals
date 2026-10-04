@@ -141,8 +141,12 @@ def verify_enrollment(root: Path, run_id: str) -> dict:
 def operational_summary(root: Path, *, as_of: str) -> dict:
     """Safe frontend export: decisions/coverage only; no premature returns."""
     config = protocol()
-    rows, runs = [], []
+    rows, runs, incomplete = [], [], {}
     for path in sorted((root / "exp005/decisions").glob("*.json")):
+        if not (root/"exp005/receipts"/(path.stem+".json")).exists():
+            partial = read_record(path)
+            incomplete[path.stem] = {"run_id":path.stem,"session":partial["session"],"status":"interrupted_enrollment"}
+            continue  # An unsealed decision is never evidence.
         enrolled = verify_enrollment(root, path.stem)
         result = read_record(root / "runs" / path.stem / "result.json")
         context = read_context(root, path.stem)
@@ -161,11 +165,28 @@ def operational_summary(root: Path, *, as_of: str) -> dict:
     outcomes = verified_outcomes(root)
     completed = sum(o["paired_complete"] for o in outcomes)
     due = due_sessions(config["effective_session"], as_of)
+    enrolled_ids = {r["run_id"] for r in runs}
+    for path in (root/"runs").glob("exp005-*/intent.json"):
+        intent = read_record(path)
+        if intent["run_id"] not in enrolled_ids and intent["session"] >= config["effective_session"]:
+            checked = verify_run(root,intent["run_id"])
+            incomplete.setdefault(intent["run_id"],{"run_id":intent["run_id"],"session":intent["session"],
+                                                    "status":checked["status"]+"_not_enrolled"})
+    reports = []
+    from src.prospective_outcomes import read_review
+    for path in sorted((root / "exp005/reviews").glob("*.json")):
+        reports.append(read_review(root,path))
+    reviewed = reports[-1] if reports else None
     return {"protocol": config, "requested_count": len(load_protocol()["universe"]), "runs": runs,
             "records": rows, "days_collected": len(runs), "genuine_records": len(genuine),
             "events": len(events), "non_events": len(genuine)-len(events),
             "failures": len(rows)-len(genuine), "completed_outcomes": completed,
+            "failed_collections":len(incomplete),"incomplete_runs":list(incomplete.values()),
+            "missing_sessions":[day for day in due if day not in {r["session"] for r in runs} | {r["session"] for r in incomplete.values()}],
             "pending_outcomes": len(events)-completed, "scheduled_sessions": len(due),
-            "complete_runs": sum(r["complete"] for r in runs),
+            "complete_runs": sum(r["complete"] and r["session"] in due for r in runs),
             "latest_collection": max((r["published_at"] for r in runs), default=None),
-            "performance_status": "sealed_until_registered_review", "comparison": []}
+            "horizon_completion": {str(h):sum(any(r["horizon"]==h and r["status"]=="completed" for r in o["forward"]) for o in outcomes) for h in config["horizons"]},
+            "performance_status": "registered_review_available" if reviewed else "sealed_until_registered_review",
+            "comparison": reviewed["comparison"] if reviewed else [],
+            "review": reviewed}

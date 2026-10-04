@@ -1,5 +1,50 @@
 # Manually invoked prospective signal archive
 
+## EXP-005 daily operation
+
+EXP-005 extends the original EXP-003 collection-only foundation documented below.
+See [EXP005_PROTOCOL.md](EXP005_PROTOCOL.md). First signal session: **2026-10-05**.
+After 00:15 New York time the following calendar day, before the next scheduled open:
+
+```powershell
+.\.venv\Scripts\python.exe -W error -m scripts.collect_prospective
+.\.venv\Scripts\python.exe -W error -m scripts.verify_prospective --run-id exp005-2026-10-05
+.\.venv\Scripts\python.exe -W error -m scripts.attach_prospective_outcomes
+.\.venv\Scripts\python.exe -W error -m scripts.build_dashboard_data
+```
+
+Collection chooses the eligible session automatically. `--as-of` only asserts
+that session; old dates fail. Explicit `--mode historical-replay --as-of DATE
+--replay-cache data/market` remains retrospective. Production has no clock override.
+Use a clean committed revision. No scheduler or orders are included.
+
+Ignored `exp005/decisions/` links the unchanged original signal/context, frozen
+protocol hash and causal volatility group. Separate `exp005/receipts/` seals
+record actual post-publication timestamps. Late enrichment is excluded. Missing
+seals fail verification and cannot be silently resealed. Original recovery and
+correction rules below remain in force. Verification recomputes V1 and ATR groups
+offline from retained input vintages.
+
+Run outcome attachment daily after completed bars are available. Separate
+`exp005/outcomes/<run>/<ticker>/<version>.json` retains input vintages, original
+decision hash, attachment time, adjustment revisions, fixed horizons and both
+exits. At 1/3/5/10/20 bars, each horizon becomes complete. Ten bars completes the
+paired exit sample; twenty completes the longest horizon. Missing windows stay
+pending. Failed acquisition attempts are preserved in `exp005/outcome_failures/`.
+Identical retries return originals; changed vintages require an existing parent
+version and reason. No original decision is edited and no future-based signal
+selection occurs. Old research caches are never refreshed by these commands.
+
+Only operational counts appear daily. Run `python -m scripts.review_prospective`
+on a registered review date, earliest **2027-04-01**. Other dates or insufficient
+all-name coverage fail closed. Reports in `exp005/reviews/` are immutable; the
+frontend displays only these gated statistics, not rolling performance. Counts
+50/100/250/500 do not override the gate. Losing and unavailable samples remain.
+
+Local hashes, atomic publication and replay detect accidental alteration, not
+adversarial rewriting. Keep independent backups and an accurate system clock.
+Adjusted vintages and a static universe still have material research limitations.
+
 This is the collection-only foundation registered in
 [EXP003_PROTOCOL.md](EXP003_PROTOCOL.md), commit `8c55fbc`. No scheduler, alerts,
 broker, live scanner or outcome evaluator is present. Both historical experiments

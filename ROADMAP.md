@@ -36,6 +36,14 @@
 - [ ] Paper trading integration
 
 Later milestones are research directions, not evidence of feasibility or an edge.
+
+- [x] EXP-005 protocol, strict manual collection and offline verification
+- [x] Separate immutable prospective outcomes and gated review infrastructure
+- [x] Prospective validation dashboard with empty-evidence states
+- [ ] EXP-005 genuinely prospective outcome evidence and registered review
+
+Infrastructure completion is not successful prospective validation. No scheduler,
+broker, new strategy or additional optimization was introduced.
 EXP-001 and EXP-002 are completed fixed-specification historical evaluations,
 not validated profitable strategies or allocated portfolio simulations. EXP-002
 uses 74 usable stocks from 95 requested current holdings; survivor selection and

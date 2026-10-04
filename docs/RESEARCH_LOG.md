@@ -1,5 +1,15 @@
 # Research log
 
+## 2026-10-04 — EXP-005 prospective infrastructure
+
+- Registered protocol `2bc12cc` before collection or outcome evaluation.
+- Built strict session collection, causal ATR context, offline decision replay,
+  separate immutable outcome versions and date/coverage-gated review reports.
+- Added a prospective frontend view with honest empty states and operational counts.
+- V1 and EXP-001–004 results remain unchanged. No genuine EXP-005 outcomes yet.
+- Next: collect eligible sessions; first possible signal session is 2026-10-05.
+  Review no earlier than 2027-04-01, subject to registered coverage gates.
+
 ## 2026-10-04 — Exit dashboard and research diagnosis
 
 - Question: why do dip signals and exit policies behave inconsistently?

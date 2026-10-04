@@ -1,5 +1,19 @@
 # Experiment registry
 
+## EXP-005 — prospective validation
+
+**Registered; infrastructure complete; outcome evidence pending.** Protocol
+commit: `2bc12cc`. First eligible signal session: 2026-10-05. Compare frozen V1's
+historical 7%/10%/ten-bar exit with ten-bar holding on identical genuine prospective
+entries, all 95 requested EXP-003 names, unchanged costs and execution semantics.
+No historical optimization. Causal prior-252-bar ATR tertiles describe context,
+never filter trades. Decisions and outcomes remain separate and immutable.
+Performance stays sealed until registered date and coverage gates pass.
+See [protocol](EXP005_PROTOCOL.md) and [operation](PAPER_ARCHIVE.md).
+
+No prospective performance conclusion is available. Historical findings below
+retain their original interpretation.
+
 The [research diagnosis](RESEARCH_DIAGNOSIS.md) is a separate **exploratory
 post-mortem**, not a fifth registered strategy experiment. Its definitions were
 recorded before calculation; all original EXP-001–004 results remain intact.

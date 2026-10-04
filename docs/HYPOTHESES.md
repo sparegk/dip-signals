@@ -1,5 +1,10 @@
 # Hypothesis registry
 
+EXP-005 registers the simplest next test: historical V1 exits versus ten-bar
+holding, with causal volatility context as a descriptive subgroup. H4 and H7
+motivate these questions; neither becomes a new signal rule. All rankings below
+remain hypothesis priorities. Future evidence is pending, not validated.
+
 No hypothesis is a validated improvement. Machine-readable definitions, risks and
 proposed tests live in `config/hypotheses.json`; the frontend reads that file.
 

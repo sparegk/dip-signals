@@ -95,6 +95,42 @@ export type Exp2 = {
   }
 }
 export type Dashboard = {
+  prospective?: {
+    protocol: { effective_session: string; review_dates: string[] }
+    requested_count: number
+    days_collected: number
+    genuine_records: number
+    events: number
+    non_events: number
+    failures: number
+    failed_collections?: number
+    incomplete_runs?: Row[]
+    missing_sessions?: string[]
+    completed_outcomes: number
+    pending_outcomes: number
+    scheduled_sessions: number
+    complete_runs: number
+    latest_collection: string | null
+    performance_status: string
+    comparison: Row[]
+    review?: { reviewed_at: string; forward: Row[]; paired_ev: Row } | null
+    records: {
+      ticker: string
+      session: string
+      classification: string
+      status: string
+      published_at: string
+      values: Row | null
+      error: string | null
+      context: { features: Row; regime: string } | null
+      volatility: {
+        group: string
+        atr_close: number | null
+        lower: number | null
+        upper: number | null
+      } | null
+    }[]
+  }
   exp004?: { status: string; reason?: string; tables?: Record<string, Row[]> }
   diagnosis?: { status: string; reason?: string; tables?: Record<string, Row[]> }
   hypotheses?: Hypothesis[]

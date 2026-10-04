@@ -14,6 +14,7 @@ const pages = [
   'Exit Research',
   'Research Diagnosis',
   'Hypotheses',
+  'Prospective Validation',
   'Features',
   'Paper Archive',
   'Data Quality',

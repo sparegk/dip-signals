@@ -47,6 +47,13 @@ export function Diagnosis({ data }: { data: Dashboard }) {
         <strong>What remains weak:</strong> stock-level SPY excess lacks breadth; 2022 struggled;
         adaptive exits increase tail losses. None is fresh validation.
       </Note>
+      <Section title="From historical patterns to fresh evidence">
+        <p>Historical evidence → hypothesis → frozen prospective test → future evidence.</p>
+        <p>
+          EXP-005 tests fixed exits versus ten-bar holding. Volatility is context, not a filter.
+        </p>
+        <a href="#prospective-validation">View prospective validation</a>
+      </Section>
       <Section
         title="Signal frequency and quality"
         note="Frequent dips can be ordinary market weakness. More active components do not guarantee a stronger outcome."

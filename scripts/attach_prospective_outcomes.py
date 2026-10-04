@@ -47,9 +47,12 @@ def main() -> None:
             failures.append({"record_id": row["record_id"], "inputs": inputs})
             continue
         parent = max(prior, key=lambda p:p["attached_at"])["version"] if prior else None
-        attach_outcome(args.root, row["run_id"], row["ticker"], inputs, version=cutoff,
-                       corrects=parent, reason="Additional completed bars/new outcome vintage" if parent else None)
-        attached += 1
+        try:
+            attach_outcome(args.root, row["run_id"], row["ticker"], inputs, version=cutoff,
+                           corrects=parent, reason="Additional completed bars/new outcome vintage" if parent else None)
+            attached += 1
+        except (ValueError,RuntimeError,OSError) as error:
+            failures.append({"record_id":row["record_id"],"inputs":inputs,"error":str(error)})
     from src.preservation import write_record
     # Preserve failed attachments without putting them in the evidence sample.
     if failures:

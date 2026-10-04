@@ -1,5 +1,9 @@
 # EXP-005 proposal — prospective controls and volatility context
 
+Superseded by [EXP005_PROTOCOL.md](EXP005_PROTOCOL.md), registered in `2bc12cc`.
+This earlier proposal is retained as research history. The registered protocol
+uses causal historical ATR tertiles instead of these proposed absolute bands.
+
 **Proposal only. Not registered, implemented as a strategy, or evaluated.**
 Choose at most these two questions. No new signal or parameter optimization.
 

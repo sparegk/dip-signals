@@ -105,6 +105,10 @@ def test_interrupted_enrollment_cannot_be_resealed(enrolled):
     (root/"exp005/receipts/test.json").unlink()
     with pytest.raises(FileNotFoundError):
         prospective.enroll(root,"test")
+    summary = prospective.operational_summary(root,as_of="2026-10-06T14:00:00Z")
+    assert summary["genuine_records"] == 0
+    assert summary["failed_collections"] == 1
+    assert summary["incomplete_runs"][0]["status"] == "interrupted_enrollment"
 
 
 def test_zero_evidence_and_pending_summary(enrolled):
@@ -196,8 +200,43 @@ def test_attached_outcomes_preserve_decisions_and_require_versions(enrolled, tmp
 
 
 def test_replay_and_pre_protocol_runs_cannot_enroll(enrolled):
-    root, _, _ = enrolled
-    # Existing legacy replay does not have protocol enrollment and cannot contribute.
+    root, _, config = enrolled
+    source = read_record(root/"runs/test/result.json")
+    import shutil
+    replay_root = root.parent/"replay_archive"
+    shutil.copytree(root/"objects",replay_root/"objects")
+    intent = archive.begin_run(replay_root,"replay",session="2026-10-05",mode="replay",config=config,
+                              code={"revision":"test","dirty":False},clock=lambda:"2026-10-06T12:00:00Z")
+    archive.finish_run(replay_root,intent,source["inputs"],clock=lambda:"2026-10-06T12:00:01Z")
+    with pytest.raises(ValueError,match="Replay"):
+        prospective.enroll(replay_root,"replay",clock=lambda:"2026-10-06T12:10:00Z")
     assert prospective.operational_summary(root,as_of="2026-10-06T14:00:00Z")["events"] == 2
     with pytest.raises(ValueError,match="backfill"):
         prospective.eligible_session("2026-10-06T12:00:00Z","2026-09-28")
+
+
+def test_no_review_can_be_opened_by_a_future_export_cutoff(tmp_path):
+    future = prospective.operational_summary(tmp_path,as_of="2027-04-01T12:00:00Z")
+    assert future["comparison"] == []
+    with pytest.raises(ValueError,match="locked"):
+        outcomes.review_report(tmp_path,clock=lambda:"2027-04-01T12:00:00Z")
+
+
+def test_registered_report_pipeline_uses_same_event_and_cannot_peek(enrolled, monkeypatch, tmp_path):
+    # Synthetic mature outcomes only; this never touches the genuine archive.
+    root, _, _ = enrolled
+    stock = path(11)
+    event = outcomes.event_outcomes(stock,stock.assign(ticker="SPY"),session=stock.timestamp.iloc[0].date().isoformat(),
+                                   component_count=3,available_at="2026-10-20T12:00:00Z")
+    record = {"record_id":"test:ABT","volatility":{"group":"low"},"session":"2026-10-05"}
+    summary = {"scheduled_sessions":110,"complete_runs":100,"records":[record],"completed_outcomes":1}
+    monkeypatch.setattr(prospective,"operational_summary",lambda *a,**kw:summary)
+    monkeypatch.setattr(outcomes,"verified_outcomes",lambda *a:[event | {"run_id":"test","ticker":"ABT"}])
+    with pytest.raises(ValueError,match="locked"):
+        outcomes.review_report(root,clock=lambda:"2027-03-31T12:00:00Z")
+    report = outcomes.review_report(root,clock=lambda:"2027-04-01T12:00:00Z")
+    assert report["completed_events"] == 1
+    all_rows = [r for r in report["comparison"] if r["grouping"] == "all"]
+    assert len(all_rows) == 2
+    assert all(r["trade_count"] == 1 for r in all_rows)
+    assert report["milestones_crossed"] == []

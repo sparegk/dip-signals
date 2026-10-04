@@ -24,12 +24,19 @@ def main() -> None:
     else:
         if args.replay_cache:
             parser.error("Prospective mode refuses historical cache inputs")
-        session = eligible_session(utc_now(), args.as_of)
+        try:
+            session = eligible_session(utc_now(), args.as_of)
+        except ValueError as error:
+            parser.error(str(error))
         if code_identity()["dirty"]:
             parser.error("Prospective collection requires a committed clean revision")
         run_id = "exp005-" + session
         collect(args.root, session=session, run_id=run_id)
-        result = enroll(args.root, run_id)
+        checked = enroll(args.root, run_id)
+        from collections import Counter
+        result = {"run_id":run_id,"session":session,
+                  "classifications":dict(Counter(checked["receipt"]["classifications"].values())),
+                  "published_at":checked["receipt"]["published_at"],"performance":"not evaluated"}
     print(json.dumps(result, indent=2))
 
 

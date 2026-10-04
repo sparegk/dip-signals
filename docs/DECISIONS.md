@@ -1,5 +1,17 @@
 # Decisions
 
+## 2026-10-04 — EXP-005 prioritizes fresh evidence
+
+Freeze V1 and the existing 95-name universe. Compare the historical V1 exit
+control with ten-bar holding on identical prospective events; do not select
+another historical winner. Register causal prior-252-bar ATR tertiles as context,
+not a filter. Protocol commit: `2bc12cc`.
+
+Preserve EXP-003 review dates/coverage gates. Count checkpoints do not authorize
+early peeking. Only operational counts are visible before a gated review.
+First eligible signal session is 2026-10-05; prior/replay records are excluded.
+Outcomes, revisions and review reports append separately without editing decisions.
+
 ## Research diagnosis and prospective-first development
 
 - Keep V1 and EXP-001–004 artifacts/configurations frozen. New consumed-history

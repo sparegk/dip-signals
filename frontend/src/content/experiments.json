@@ -26,6 +26,15 @@
     "link": "exit-research",
     "next": "Compare expected profit and downside"
   },
+  "EXP-005": {
+    "title": "Does V1 work on fresh data?",
+    "question": "Will historical dip behavior persist in genuinely prospective observations?",
+    "test": "Freeze V1 and compare its historical exit control with a ten-bar hold on the same future signals.",
+    "result": "Registered. No prospective outcome evidence yet.",
+    "limitation": "Collection is manual, the universe is static, and performance stays sealed until review gates pass.",
+    "link": "prospective-validation",
+    "next": "See prospective collection status"
+  },
   "EXP-003": {
     "title": "Can we trust and preserve the data?",
     "question": "Why were stocks excluded, and how can future signals be recorded fairly?",

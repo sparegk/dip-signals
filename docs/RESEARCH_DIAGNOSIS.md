@@ -1,5 +1,13 @@
 # Research diagnosis
 
+## Current next step: EXP-005
+
+Historical evidence → hypothesis → frozen prospective test → fresh evidence.
+EXP-005 registers V1's historical exit versus ten-bar holding on the same future
+events. Causal ATR tertiles describe volatility; they do not filter trades.
+No adaptive optimization or repeated-support rule is promoted. Prospective
+outcomes remain pending. See [protocol](EXP005_PROTOCOL.md).
+
 Historical patterns generate hypotheses. Only genuinely prospective records can
 provide fresh validation. No rule or parameter changes are authorized here.
 

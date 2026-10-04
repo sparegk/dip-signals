@@ -6,8 +6,11 @@ import { Signals } from './Explorer'
 import { Empty } from './components'
 import ExitResearch from './ExitResearch'
 import { Diagnosis, Hypotheses } from './Diagnosis'
+import ProspectiveValidation from './ProspectiveValidation'
 export default function ResearchRouter({ page, data }: { page: string; data: Dashboard }) {
   switch (page) {
+    case 'prospective-validation':
+      return <ProspectiveValidation data={data} />
     case 'exit-research':
       return <ExitResearch data={data} />
     case 'research-diagnosis':
