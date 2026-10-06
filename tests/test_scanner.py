@@ -169,6 +169,24 @@ def test_latest_pointer_publication_is_atomic(tmp_path, monkeypatch):
     assert not list(tmp_path.glob(".latest-*"))
 
 
+def test_transient_windows_sharing_failure_keeps_atomic_pointer(tmp_path, monkeypatch):
+    from src import atomic_pointer
+    path = tmp_path/"latest.json"
+    scanner.publish_pointer(path, {"version": 1})
+    original = atomic_pointer.os.replace
+    calls = []
+    def busy(source, target):
+        calls.append(1)
+        if len(calls) < 3:
+            assert path.read_bytes() == b'{"version":1}\n'
+            raise PermissionError("Windows sharing violation")
+        original(source,target)
+    monkeypatch.setattr(atomic_pointer.os, "replace", busy)
+    monkeypatch.setattr(atomic_pointer.time, "sleep", lambda _: None)
+    scanner.publish_pointer(path, {"version": 2})
+    assert len(calls) == 3 and path.read_bytes() == b'{"version":2}\n'
+
+
 def test_transient_retries_retained_and_invalid_ohlc_not_retried(tmp_path, monkeypatch):
     from scripts import archive_signals
     config = {"benchmark": "SPY", "universe": ["ABT"]}
@@ -197,6 +215,17 @@ def test_benchmark_review_refuses_early_unblinding(tmp_path):
     with pytest.raises(ValueError, match="locked"):
         benchmark_review(tmp_path, {"scheduled_sessions": 100, "complete_runs": 100}, "2026-10-06T12:00:00Z")
     assert not (tmp_path/"exp005/benchmark_reviews").exists()
+
+
+def test_sealed_partial_run_shows_next_new_collection_window(tmp_path):
+    from src.preservation import write_record, canonical_json, digest
+    root = tmp_path/"data/archive"
+    payload = {"session": "2026-10-05", "status": {"collection_completed": "2026-10-06T11:00:00Z"}}
+    write_record(root/"today/test.json", payload)
+    scanner.publish_pointer(tmp_path/"data/current_market/latest.json", {"root": "data/archive", "run_id": "test", "sha256": digest(canonical_json(payload))})
+    exported = scanner.export_today(tmp_path, "2026-10-06T12:00:00Z")
+    assert exported["clock"]["collection_window_start"] == "2026-10-07T04:15:00+00:00"
+    assert exported["clock"]["eligible_session"] == "2026-10-05"
 
 
 def test_benchmark_attachment_is_separate_immutable_and_reproducible(enrolled, monkeypatch, tmp_path):

@@ -39,6 +39,11 @@ snapshots live under `data/current_market`. Its small `latest.json` pointer is
 atomically replaced; retained decision bytes are never replaced. Browser exports
 are compact, content-addressed generations; Python owns all calculations.
 
+The Vite development server serves export JSON directly and excludes generated
+data from its watcher, avoiding Windows manifest locks while making new generations
+immediately available. Restart Vite once after updating its configuration; reload
+the page after an export. Production hosting serves ordinary static exports.
+
 Acquisition retries transient failures up to three times, preserving every attempt
 under `runs/<id>/attempts/<ticker>/`. Invalid OHLC is retained as failure without
 repair. Partial runs remain partial, and the daily command exits nonzero after

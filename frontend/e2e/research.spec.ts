@@ -7,7 +7,7 @@ test.skip(
 test('real artifacts render every view without browser errors', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', (e) => errors.push(e.message))
-  await page.goto('/')
+  await page.goto('/#overview')
   await expect(page.getByRole('heading', { name: 'DipSignal V1', exact: true })).toBeVisible()
   await expect(
     page.getByText('Registered breadth criterion: failed.', { exact: true }),
@@ -29,21 +29,60 @@ test('real artifacts render every view without browser errors', async ({ page })
     ['data-quality', 'Small discrepancies. Real research consequences.'],
     ['research-log', 'Research log'],
     ['roadmap', 'What exists. What remains open.'],
-    ['signals', 'Signals in context'],
+    ['signals', 'Current Dip Candidates'],
+    ['edge', 'Edge Monitor'],
+    ['today', 'Today'],
   ]) {
     await page.goto(`/#${route}`)
     await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible()
   }
   await page.goto('/#paper-archive')
-  await expect(
-    page.getByRole('heading', {
-      name: 'Prospective archive initialized — awaiting first eligible completed session.',
-    }),
-  ).toBeVisible()
+  await expect(page.getByRole('tab', { name: 'Prospective', exact: true })).toBeVisible()
   await page.getByRole('tab', { name: 'Historical replay' }).click()
   await expect(page.getByText('Retrospective records.', { exact: false })).toBeVisible()
   await page.getByRole('button', { name: 'ABBV', exact: true }).click()
   await expect(page.getByText('Configuration SHA-256', { exact: true })).toBeVisible()
+  expect(errors).toEqual([])
+})
+
+test('daily workstation separates candidates, historical references and sealed evidence', async ({
+  page,
+}) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible()
+  await expect(page.getByText('Latest completed US session', { exact: true })).toBeVisible()
+  const candidates = page.getByRole('table', { name: 'Current V1 candidates', exact: true })
+  if (await candidates.count()) {
+    await expect(page.getByRole('heading', { name: 'Universe health', exact: true })).toBeVisible()
+    const buttons = candidates.locator('tbody button')
+    if (await buttons.count()) {
+      await buttons.first().click()
+      await expect(
+        page.getByText('Historical reference only — current future outcome is unknown.', {
+          exact: false,
+        }),
+      ).toBeVisible()
+      await expect(page.getByRole('table', { name: 'Why the V1 event triggered' })).toBeVisible()
+      await expect(
+        page.getByRole('heading', { name: 'Exit Research Envelope', exact: true }),
+      ).toBeVisible()
+      await page.screenshot({ path: 'test-results/today-detail-desktop.png', fullPage: true })
+    }
+    await page.getByText('Signal Monitor · entire 95-name universe', { exact: true }).click()
+    await page.getByRole('combobox', { name: 'Active components' }).selectOption('2')
+    await expect(page.getByRole('table', { name: 'Current universe signal monitor' })).toBeVisible()
+  }
+  await page.goto('/#edge')
+  await expect(page.getByRole('heading', { name: 'Prospective Edge', exact: true })).toBeVisible()
+  await expect(page.getByText('Individual returns remain sealed.', { exact: false })).toBeVisible()
+  await page.screenshot({ path: 'test-results/edge-desktop.png', fullPage: true })
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/#today')
+  await expect(page.getByRole('heading', { name: 'Today', exact: true })).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  await page.screenshot({ path: 'test-results/today-mobile.png', fullPage: true })
   expect(errors).toEqual([])
 })
 test('signal detail, feature filtering and mobile navigation', async ({ page }) => {

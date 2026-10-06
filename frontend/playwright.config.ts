@@ -1,4 +1,8 @@
 import { defineConfig } from '@playwright/test'
+import { existsSync } from 'node:fs'
+if (!process.env.PLAYWRIGHT_BROWSERS_PATH && existsSync('.playwright')) {
+  process.env.PLAYWRIGHT_BROWSERS_PATH = '.playwright'
+}
 const preview = process.env.DASHBOARD_PREVIEW === '1'
 const baseURL = `http://127.0.0.1:${preview ? 4173 : 5173}`
 export default defineConfig({

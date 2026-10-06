@@ -903,3 +903,25 @@ training selects by net EV only; historical OOS dates remain consumed evidence.
 Registration `55a4c5b` was pushed before evaluation; all 15 research artifact hashes
 match an independent replay. EXP-001/002/003 conclusions and artifacts remain
 unchanged. Prospective evaluation is pending genuine paper-signal outcomes.
+
+## EXP-005 — Prospective Market Scanner & Validation (registered; evidence pending)
+
+Question: does frozen V1 identify current dips with subsequent behavior better
+than SPY, retained non-signal/unconditional stock controls and cash opportunity cost,
+after costs and with acceptable downside? See [the protocol](EXP005_PROTOCOL.md).
+The original configuration/hash and review gates are unchanged; the daily scanner
+extension was registered in `4925d8b` and implemented in `5526304` before acquisition.
+
+First operational collection: signal session 2026-10-05, published 2026-10-06
+14:19:57 Athens before the next open. **Partial: 72/95 evaluated, 23 malformed-OHLC
+failures.** The valid decisions include three genuine V1 events (C, GE, HD) and
+69 non-events. The run does not count as an all-name complete run. No stocks were
+removed, no OHLC repaired and no thresholds changed. **Zero genuine prospective
+outcome records; no performance evaluation or positive-edge claim.**
+
+Current/historical/ prospective data remain separate. Prior-only references have
+a permanent pre-EXP-005 ceiling; future outcomes remain sealed until the existing
+review gates. A retained official Treasury yield supplies decision-linked cash
+context. EXP-004 has no single frozen adaptive policy, so no current adaptive exit
+winner is selected. See [the milestone report](EXP005_MILESTONE.md) for candidate
+statistics, methodology, failures and daily operation.

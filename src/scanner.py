@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 
 from src.backtest import compute_forward_outcomes, simulate_barrier_trades
+from src.atomic_pointer import replace_pointer
 from src.data import load_parquet
 from src.features import build_features
 from src.paper_archive import ROOT, load_protocol, verify_run
@@ -340,6 +341,10 @@ def verify_today(root: Path, run_id: str) -> dict:
         parsed = parse_treasury(get_object(root, quote["raw_sha256"]), payload["session"])
         if any(quote[k] != v for k, v in parsed.items()) or quote["scenarios"] != cash_scenarios(quote["annual_yield"], payload["session"]):
             raise ValueError("Treasury replay mismatch")
+        expected_entry = payload["status"]["expected_entry_timestamp"]
+        timely = utc(quote["retrieved_at"]) <= utc(payload["calculated_at"]) < utc(expected_entry)
+        if quote["prospective_eligible"] != timely:
+            raise ValueError("Treasury decision-time classification mismatch")
     return payload
 
 
@@ -352,7 +357,7 @@ def publish_pointer(path: Path, payload: dict) -> None:
             stream.write(canonical_json(payload))
             stream.flush()
             os.fsync(stream.fileno())
-        os.replace(temporary, path)
+        replace_pointer(temporary, path)
     finally:
         Path(temporary).unlink(missing_ok=True)
 
@@ -371,4 +376,12 @@ def export_today(project: Path, as_of: str) -> dict:
     if digest(canonical_json(payload)) != latest["sha256"]:
         raise ValueError("Latest snapshot hash mismatch")
     warning = None if payload["session"] == clock["latest_completed_session"] else "Stale snapshot — latest completed session has not been collected"
+    if payload["session"] == clock["latest_completed_session"] and payload["status"]["collection_completed"]:
+        # The original attempt is sealed, including partial runs. A retry cannot
+        # replace it; show the next new signal session's scheduled window.
+        day = pd.Timestamp(payload["session"])
+        cal = xcals.get_calendar("XNYS", start=payload["session"], end=f"{day.year+1}-12-31")
+        upcoming = session_facts(cal.next_session(day).date().isoformat())
+        clock["collection_window_start"] = upcoming["collection_start"]
+        clock["collection_window_end"] = upcoming["next_open"]
     return {"clock": clock, "snapshot": payload, "warning": warning}

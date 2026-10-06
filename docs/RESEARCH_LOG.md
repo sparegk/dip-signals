@@ -18,6 +18,33 @@
   tests pass, production build passes and pip check passes. Final live collection
   and preservation verification are recorded in the completion entry below.
 
+### 2026-10-06 - Live collection and operational verification
+
+- Latest completed/eligible session: 2026-10-05. Collection published at
+  14:19:57 Athens; enrollment sealed before 16:30. Retained 72 genuine decisions,
+  three events (C, GE, HD), 69 non-events and 23 excluded malformed-OHLC failures.
+  Run remains partial and contributes no all-name complete-run credit.
+- Zero genuine prospective outcome records and zero benchmark records. Daily
+  outcome update attached zero records with zero failures; performance stays sealed.
+- Treasury investment yield: 4.15% annualized dated 2026-10-05, retained before
+  expected entry. Expected ten-bar cash opportunity cost is 0.1478%; this is
+  an approximation with different risk, not a historical strategy excess result.
+- Windows Vite watch handles blocked atomic manifest replacement. Excluding
+  generated exports plus a direct development JSON handler resolves locks and
+  serves new generations immediately. Byte/hash verification remains enabled.
+  Bounded sharing retries retain the old pointer on failure. After sealed attempts,
+  Today displays the next new session's collection window rather than a past start.
+- Final validation: **647 backend tests**, warnings as errors; **21 frontend
+  tests**, **five real-data browser scenarios**, production build and formatting
+  checks pass; pip check passes. Desktop/mobile candidate and Today layouts were
+  inspected. All 275 files in the prior experiment/archive inventory remain
+  unchanged; V1/config source checks pass. Full archive/enrollment/scanner replay
+  passes; transient acquisition-attempt objects are also verified.
+- No adaptive policy, portfolio allocation, optimization, scheduler or deployment
+  was introduced. Next: retained failure diagnosis and data-source compatibility
+  to improve collection coverage without changing the universe or gates. See
+  `docs/DAILY_RESEARCH.md` and `docs/EXP005_MILESTONE.md`.
+
 ## 2026-10-04 — EXP-005 prospective infrastructure
 
 - Registered protocol `2bc12cc` before collection or outcome evaluation.

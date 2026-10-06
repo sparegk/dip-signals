@@ -35,7 +35,18 @@ def main() -> None:
     from src.paper_archive import verify_run
     attempts = [verify_run(args.root, p.parent.name, replay=True)["status"]
                 for p in (args.root / "runs").glob("*/intent.json")]
+    from src.preservation import get_object, read_record
+    acquisition_attempts = 0
+    for path in (args.root / "runs").glob("*/attempts/*/*.json"):
+        item = read_record(path)
+        if path.parent.name != item["ticker"]:
+            raise ValueError("Acquisition attempt identity mismatch")
+        for key in ("raw_sha256", "validated_sha256"):
+            if key in item:
+                get_object(args.root, item[key])
+        acquisition_attempts += 1
     print(json.dumps({"verified": True, "enrollments": checked, "outcome_records": len(outcomes), "benchmark_records": len(benchmarks),
+                      "acquisition_attempts_verified": acquisition_attempts,
                       "archive_attempt_statuses": attempts, "performance": "not inspected"}, indent=2))
 
 

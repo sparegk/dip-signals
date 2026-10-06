@@ -72,7 +72,6 @@ export function athens(value: unknown): string {
 const metrics: Column[] = [
   { key: 'ticker', label: 'Ticker' },
   { key: 'signal_date', label: 'Signal session' },
-  { key: 'active_components', label: 'Active components' },
   { key: 'close', label: 'Adjusted close', format: 'number' },
   {
     key: 'dip_component_count',
@@ -90,6 +89,7 @@ const metrics: Column[] = [
   { key: 'v1_net_ev', label: 'Historical reference EV', format: 'percent' },
   { key: 'historical_excess', label: 'Historical SPY excess', format: 'pp' },
   { key: 'previous_events', label: 'Prior events', format: 'integer' },
+  { key: 'active_components', label: 'Active components' },
 ]
 const horizonColumns: Column[] = [
   { key: 'horizon', label: 'Bars' },
@@ -390,6 +390,12 @@ export default function Today({
             <code>python -m scripts.run_today</code> and reload to refresh.
           </p>
           {today.warning && <Note warning>{today.warning}</Note>}
+          {snapshot && snapshot.status.completion_status !== 'complete' && (
+            <Note warning>
+              Partial collection — {String(snapshot.status.failed_tickers)} requested stocks
+              unavailable. This run does not satisfy the all-name prospective coverage gate.
+            </Note>
+          )}
         </Section>
       ) : null}
       {!snapshot ? (
@@ -498,6 +504,10 @@ export default function Today({
         title="Prospective archive progress"
         note="Prospective Evidence · operational counts only until the registered review."
       >
+        <p>
+          Select a ticker for details. Sort by a column heading; scroll sideways for all
+          measurements.
+        </p>
         <p>
           {data.prospective?.events ?? 0} genuine events · {data.prospective?.pending_outcomes ?? 0}{' '}
           pending ten-bar paired outcomes · {data.prospective?.completed_outcomes ?? 0} complete

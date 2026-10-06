@@ -18,6 +18,7 @@ import numpy as np
 import pandas as pd
 
 from src.backtest import assign_research_splits, compute_forward_outcomes, simulate_barrier_trades
+from src.atomic_pointer import replace_pointer
 from src.data import load_parquet
 from src.features import build_features
 from src.paper_archive import coverage, load_protocol, verify_run
@@ -348,7 +349,7 @@ def build_dashboard(root: Path = ROOT, output: Path | None = None, *, as_of: str
             stream.write(canonical_json(manifest))
             stream.flush()
             os.fsync(stream.fileno())
-        os.replace(name, output / "manifest.json")
+        replace_pointer(name, output / "manifest.json")
     finally:
         Path(name).unlink(missing_ok=True)
     return {"generation": generation, "ticker_files": len(series1 | series2), "bytes": sum(map(len, files.values())),
