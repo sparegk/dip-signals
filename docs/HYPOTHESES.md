@@ -54,3 +54,14 @@ results must be reviewed at the existing gates before a new candidate is frozen.
    definition underperformed the no-known-zone group on historical SPY excess.
 
 No combined ranking, new exit, sizing rule or optimization is introduced here.
+
+## Flexible loss-control hypotheses after the data-quality audit
+
+See [risk research foundation](RISK_MANAGEMENT_RESEARCH.md). Priority reflects
+historical rationale only: (1) conditional ATR-scaled MAE/MFE distributions,
+(2) recovery duration with explicit censoring, (3) gap/regime portfolio stress,
+(4) entry quality only if stable training-only separation emerges. Winners and
+losers currently overlap substantially at entry; future MAE differences are not
+predictors. Do not infer an optimal stop from excursion percentiles or select a
+filter on the consumed loss sample. Freeze any future model before genuine OOS
+and leave EXP-005 unchanged. Reliable all-name collection comes first.

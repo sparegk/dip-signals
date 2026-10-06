@@ -14,6 +14,21 @@ See [protocol](EXP005_PROTOCOL.md) and [operation](PAPER_ARCHIVE.md).
 No prospective performance conclusion is available. Historical findings below
 retain their original interpretation.
 
+### 2026-10-06 — Data-quality and loss-diagnostic foundation
+
+The retained 23 failures contain 41 one-spacing adjusted-close boundary defects.
+Paired arithmetic supports the documented exact raw-equality transformation from
+October 6 signal session onward; strict validation remains unchanged. New
+diagnostic coverage is 95/95 plus SPY; the original 72/95 run remains partial.
+Independent candle verification is unavailable; historical identity limitations
+remain explicit. See [audit](DATA_QUALITY_AUDIT.md).
+
+Historical diagnosis of frozen EXP-002 completed independent control trades finds
+entry covariate overlap, larger future MAE in losses, 367/902 stopped complete
+twenty-bar paths later recovering, and 143/952 gap-through stop exits. These are
+consumed-history diagnoses, not another optimization experiment or validation.
+No new stop/filter/risk model is selected. See [risk foundation](RISK_MANAGEMENT_RESEARCH.md).
+
 ### 2026-10-06 — Daily scanner operational update
 
 Question: does frozen V1 identify current dips with subsequent behavior better

@@ -128,6 +128,8 @@ def verify_benchmark(root: Path, path: Path) -> dict:
         if i["status"] != "available" or i.get("input_kind") != "new_provider_vintage" or utc(i["provenance"]["retrieved_at"]) > utc(payload["attached_at"]):
             raise ValueError("Invalid benchmark vintage")
         get_object(root, i["validated_sha256"])
+        from src.adjustment import verify_adjustment
+        verify_adjustment(root, i)
         frames[t] = load_parquet(root / "objects" / i["validated_sha256"], ticker=t)
         if any(utc(session_facts(d.date().isoformat())["close"]) > utc(i["provenance"]["retrieved_at"]) for d in frames[t].timestamp):
             raise ValueError("Benchmark vintage includes bars not closed at retrieval")

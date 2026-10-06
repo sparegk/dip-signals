@@ -41,9 +41,12 @@ def main() -> None:
         item = read_record(path)
         if path.parent.name != item["ticker"]:
             raise ValueError("Acquisition attempt identity mismatch")
-        for key in ("raw_sha256", "validated_sha256"):
+        for key in ("raw_sha256", "validated_sha256", "paired_sha256"):
             if key in item:
                 get_object(args.root, item[key])
+        from src.adjustment import verify_adjustment
+        if item['status'] == 'available':
+            verify_adjustment(args.root, item)
         acquisition_attempts += 1
     print(json.dumps({"verified": True, "enrollments": checked, "outcome_records": len(outcomes), "benchmark_records": len(benchmarks),
                       "acquisition_attempts_verified": acquisition_attempts,

@@ -1,5 +1,28 @@
 # Decisions
 
+## 2026-10-06 — Evidence-based boundary adjustment and loss diagnosis
+
+Audit all 23 original failures independently and retain every original byte.
+41 offending original candles are one-spacing close-boundary violations. Fresh
+paired inputs show raw ties at all 41 dates and reproduce 30 adjusted violations.
+This supports exact-boundary transformation, not relaxed OHLC validation.
+Validate raw prices first; only reconcile an exact tie producing adjacent float
+error; record all changes. New full-universe diagnostic inputs pass 95/95 plus
+SPY, with previously valid values unchanged. Effective signal session October 6;
+never repair or promote the original 72/95 partial run. No frozen V1/config change.
+
+Official SEC mapping and 23 issuer submissions are retained. XOM's new Holdings
+CIK is an identity discontinuity requiring disclosure. Stooq challenged every
+request and Nasdaq returned an application error; independent candle agreement
+is unresolved, not assumed. Full security/corporate-action history remains limited.
+
+Loss diagnosis reads only hash-verified consumed EXP-002 artifacts, never the
+prospective outcomes. Compare frozen control and costed ten-bar hold cohorts,
+entry covariates, full-path excursions, fixed-control recovery, gaps and folds.
+No stop grid, predictor fitting, filter or risk score. Entry distributions overlap;
+future MAE separation is not an entry predictor. Conditional volatility envelopes
+are a future hypothesis, not a deployed policy. See RISK_MANAGEMENT_RESEARCH.md.
+
 ## 2026-10-06 — Daily scanner extends the registered prospective system
 
 Preserve the original EXP-005 registration/hash and review gates. Register the

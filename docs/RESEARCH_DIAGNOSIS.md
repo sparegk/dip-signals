@@ -1,5 +1,15 @@
 # Research diagnosis
 
+## Historical loss foundation, 2026-10-06
+
+See [RISK_MANAGEMENT_RESEARCH.md](RISK_MANAGEMENT_RESEARCH.md) for exact definitions,
+MAE distributions, entry-covariate overlap, stopped-then-recovered paths, gap and
+regime findings from verified consumed artifacts. This is diagnosis, not fresh
+validation. Entry-time losers are not demonstrated to be reliably predictable.
+Future-path differences motivate research; they cannot become decision features.
+No historical conclusion below, including failed SPY breadth and adaptive downside,
+is replaced. Data-quality repair and daily prospective coverage take priority.
+
 ## Current next step: EXP-005
 
 Historical evidence → hypothesis → frozen prospective test → fresh evidence.

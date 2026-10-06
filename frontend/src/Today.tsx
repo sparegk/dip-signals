@@ -31,6 +31,21 @@ export type CurrentRecord = {
   } | null
 }
 export type TodayData = {
+  health?: {
+    sessions: Row[]
+    recurring_failures: Row[]
+    gate: {
+      scheduled_sessions: number
+      complete_timely_sessions: number
+      complete_fraction: number
+      minimum_scheduled_sessions: number
+      required_complete_fraction: number
+      required_tickers_per_complete_session: number
+      satisfied: boolean
+      consecutive_valid_sessions: number
+      note: string
+    }
+  }
   clock: {
     as_of: string
     latest_completed_session: string
@@ -438,15 +453,80 @@ export default function Today({
                   status: r.status,
                   reason: r.error,
                   latest_session: r.latest_session,
+                  signal_session: snapshot.session,
                 }))}
               columns={[
                 { key: 'ticker', label: 'Ticker' },
                 { key: 'status', label: 'Status' },
+                { key: 'signal_session', label: 'Requested session' },
                 { key: 'latest_session', label: 'Latest source session' },
                 { key: 'reason', label: 'Unavailable — reason' },
               ]}
             />
           </Section>
+          {today?.health && (
+            <Section
+              title="Prospective Coverage Gate"
+              note="Operational reliability only; no signal performance."
+            >
+              <p>
+                {today.health.gate.complete_timely_sessions}/{today.health.gate.scheduled_sessions}{' '}
+                complete timely sessions
+                {' · '}
+                {format(today.health.gate.complete_fraction, 'rate')} coverage of scheduled
+                sessions. Required: at least {today.health.gate.minimum_scheduled_sessions}{' '}
+                scheduled sessions, {format(today.health.gate.required_complete_fraction, 'rate')}{' '}
+                complete timely originals, with all{' '}
+                {today.health.gate.required_tickers_per_complete_session} requested stocks each
+                time.
+              </p>
+              <Note warning={!today.health.gate.satisfied}>
+                {today.health.gate.satisfied
+                  ? 'Operational coverage gate satisfied; registered review date still applies.'
+                  : 'Coverage gate not satisfied.'}{' '}
+                Consecutive valid sessions: {today.health.gate.consecutive_valid_sessions}.{' '}
+                {today.health.gate.note}
+              </Note>
+              <DataTable
+                caption="Collection reliability by session"
+                rows={today.health.sessions}
+                columns={[
+                  { key: 'session', label: 'Session' },
+                  { key: 'requested', label: 'Requested' },
+                  { key: 'collected', label: 'Collected inputs' },
+                  { key: 'successful', label: 'Successfully evaluated' },
+                  { key: 'failed', label: 'Failed / not collected' },
+                  { key: 'stale_incomplete', label: 'Stale / incomplete' },
+                  { key: 'coverage_percent', label: 'Coverage (%)', format: 'number' },
+                  { key: 'complete_timely', label: 'Complete timely original' },
+                ]}
+              />
+              <details className="disclosure">
+                <summary>Recurring failures and categories</summary>
+                <DataTable
+                  caption="Recurring failing stocks"
+                  rows={today.health.recurring_failures}
+                  columns={[
+                    { key: 'ticker', label: 'Ticker' },
+                    { key: 'sessions', label: 'Failed sessions' },
+                  ]}
+                />
+                <DataTable
+                  caption="Failure categories"
+                  rows={today.health.sessions.flatMap((r) =>
+                    Object.entries((r.categories ?? {}) as Record<string, number>).map(
+                      ([category, count]) => ({ session: r.session, category, count }),
+                    ),
+                  )}
+                  columns={[
+                    { key: 'session', label: 'Session' },
+                    { key: 'category', label: 'Category' },
+                    { key: 'count', label: 'Stocks' },
+                  ]}
+                />
+              </details>
+            </Section>
+          )}
           <Section
             title="Current market context"
             note="SPY is the equity benchmark; no separate intraday S&P 500 feed is implied."

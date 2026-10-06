@@ -111,7 +111,16 @@ def capture_input(root: Path, ticker: str, *, config: dict, session: str,
             result["input_kind"] = "historical_cache_replay"
         else:
             end = (pd.Timestamp(session) + pd.Timedelta(days=1)).date().isoformat()
-            raw = download_raw_data(ticker, start=config["history_start"], end=end)
+            from src.adjustment import EFFECTIVE_SESSION, POLICY, adjust_paired, download_paired
+            if session >= EFFECTIVE_SESSION:
+                paired = download_paired(ticker, start=config["history_start"], end=end)
+                retained = preserve_raw(root, paired)
+                result.update(paired_sha256=retained['raw_sha256'], provenance=retained['provenance'],
+                              adjustment_policy=POLICY)
+                raw, changes = adjust_paired(paired, ticker)
+                result['adjustment_changes'] = changes
+            else:
+                raw = download_raw_data(ticker, start=config["history_start"], end=end)
             result.update(preserve_raw(root, raw))
             result["input_kind"] = "new_provider_vintage"
             frame = clean_data(raw, ticker)
@@ -277,9 +286,12 @@ def verify_run(root: Path, run_id: str, *, replay: bool = False) -> dict:
         if path.stem != item["ticker"]:
             raise ValueError("Acquisition identity mismatch")
         acquired[item["ticker"]] = item
-        for key in ("raw_sha256", "validated_sha256"):
+        for key in ("raw_sha256", "validated_sha256", "paired_sha256"):
             if key in item:
                 get_object(root, item[key])
+        from src.adjustment import verify_adjustment
+        if item['status'] == 'available':
+            verify_adjustment(root, item)
     if (directory / "result.json").exists():
         pending = read_record(directory / "result.json")
         if pending["intent_sha256"] != digest(canonical_json(intent)):
@@ -288,7 +300,7 @@ def verify_run(root: Path, run_id: str, *, replay: bool = False) -> dict:
             if pending["inputs"].get(ticker) != item:
                 raise ValueError("Acquisition differs from result")
         for item in pending["inputs"].values():
-            for key in ("raw_sha256", "validated_sha256"):
+            for key in ("raw_sha256", "validated_sha256", "paired_sha256"):
                 if key in item:
                     get_object(root, item[key])
     if (directory / "recovery.json").exists():
@@ -312,9 +324,12 @@ def verify_run(root: Path, run_id: str, *, replay: bool = False) -> dict:
     if result["status"] != expected_status:
         raise ValueError("Invalid run completion status")
     for item in result["inputs"].values():
-        for key in ("raw_sha256", "validated_sha256"):
+        for key in ("raw_sha256", "validated_sha256", "paired_sha256"):
             if key in item:
                 get_object(root, item[key])
+        from src.adjustment import verify_adjustment
+        if item['status'] == 'available':
+            verify_adjustment(root, item)
     expected = classifications(intent, result, receipt["published_at"], config)
     if receipt["classifications"] != expected:
         raise ValueError("Invalid timing classifications")

@@ -384,4 +384,6 @@ def export_today(project: Path, as_of: str) -> dict:
         upcoming = session_facts(cal.next_session(day).date().isoformat())
         clock["collection_window_start"] = upcoming["collection_start"]
         clock["collection_window_end"] = upcoming["next_open"]
-    return {"clock": clock, "snapshot": payload, "warning": warning}
+    from src.collection_health import collection_health
+    health = collection_health(project / 'data/paper_archive', as_of=as_of)
+    return {"clock": clock, "snapshot": payload, "warning": warning, "health": health}

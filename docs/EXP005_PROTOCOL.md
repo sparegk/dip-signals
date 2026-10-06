@@ -1,5 +1,25 @@
 # EXP-005 — Prospective Market Scanner & Validation
 
+## Data-only ingestion amendment registered 2026-10-06
+
+First effective signal session: **2026-10-06** (collection October 7). Preserve
+all earlier decisions/failures and original configuration/hash/review gates.
+The retained paired audit supports `raw-boundary-equality-v1`: validate raw OHLC
+strictly; retain raw OHLC, adjusted close and actions; apply the same provider
+adjustment; reconcile only a close/high or close/low boundary that was exactly
+equal in raw inputs and differs by exactly one adjacent binary64 value after
+adjustment. Retain every transformation and replay it from paired object hashes.
+Legacy adjusted-only inputs are never repaired. Strict validation and caches
+remain unchanged. No new signal, price filling, generic tolerance or exit rule.
+See [complete evidence and unresolved independent checks](DATA_QUALITY_AUDIT.md).
+
+New diagnostic coverage of 95/95 does not retroactively count as prospective
+coverage. Original October 5 run stays 72/95 partial. Coverage requires timely
+original enrolled runs across all 95, at least 100 scheduled sessions and 80%
+complete runs. Consecutive valid sessions are descriptive only, not a new gate.
+All outcome review dates and seals remain unchanged; no prospective performance
+was inspected to motivate this engineering amendment.
+
 Registered before collection. Historical tuning is paused. No historical result
 is evidence for this experiment, and V1 is unchanged.
 

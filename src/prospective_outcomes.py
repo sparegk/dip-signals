@@ -126,9 +126,11 @@ def verify_outcome(root: Path, path: Path) -> dict:
         if payload["parent_outcome_sha256"] != digest(canonical_json(parent)) or utc(payload["attached_at"]) <= utc(parent["attached_at"]):
             raise ValueError("Outcome correction linkage mismatch")
     for item in payload["inputs"].values():
-        for key in ("validated_sha256", "raw_sha256"):
+        for key in ("validated_sha256", "raw_sha256", "paired_sha256"):
             if key in item:
                 get_object(root, item[key])
+        from src.adjustment import verify_adjustment
+        verify_adjustment(root, item)
     original = read_record(root / "runs" / payload["run_id"] / "result.json")
     row = next(r for r in original["records"] if r["ticker"] == payload["ticker"])
     if not row["values"]["dip_event_v1"]:

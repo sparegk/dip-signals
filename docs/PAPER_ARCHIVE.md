@@ -1,5 +1,32 @@
 # Manually invoked prospective signal archive
 
+## Paired ingestion and operational health, registered 2026-10-06
+
+From signal session October 6 onward, new acquisition retains `paired_sha256`
+(provider OHLC plus Adj Close/actions) before validation. `raw_sha256` remains
+the transformed adjusted frame; `validated_sha256` is the canonical snapshot.
+`adjustment_policy` and `adjustment_changes` record every boundary transformation.
+Failed paired validation still retains paired bytes/provenance and the error.
+Verification replays transformations from the paired vintage; missing or changed
+objects/evidence fail. Old input schemas and old failed attempts stay unchanged.
+No rewrite, retroactive enrollment or successful replacement of a partial run.
+
+The Today operational trend uses original runs only and keeps all 95 names in
+each session denominator. Interrupted collected inputs and evaluated decisions
+are separate; missing sessions remain visible. All-name timely eligibility also
+requires the original enrollment seals. The registered coverage gate counts
+scheduled sessions whose deadlines have passed; an in-window original may appear
+in the operational trend before entering that denominator. This avoids prematurely
+crediting the current collection window. No return/outcome inspection is involved.
+
+Existing context sidecars already retain ATR, volume, benchmark state and strictly
+mature prior-dip visits; original decisions retain components/severity, timestamp,
+configuration/code/source hashes. These are sufficient foundations for later
+loss diagnosis. Extra risk variables require advance versioned registration,
+never future MAE/MFE/recovery fields added to a decision. Daily command remains
+`python -W error -m scripts.run_today`, followed by the existing outcome updater
+and offline verifier. Collection is manual; no unattended scheduler is installed.
+
 ## EXP-005 daily operation
 
 EXP-005 extends the original EXP-003 collection-only foundation documented below.

@@ -237,3 +237,4 @@ __marimo__/
 *.tsbuildinfo
 /results/research_diagnosis/
 /frontend/.playwright/
+/.test-runs/

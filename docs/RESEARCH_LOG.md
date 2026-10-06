@@ -1,5 +1,29 @@
 # Research log
 
+## 2026-10-06 — Prospective data audit and historical loss foundation
+
+- Retained 23 original failures/41 offending candles; individually classified
+  dates/OHLC, exact spacing, original hashes and new paired evidence documented.
+- Retrieved paired vintages, official SEC mapping/submissions and independent
+  source attempts without modifying old data. Stooq returned challenges; Nasdaq
+  returned a date error and then zero records for a corrected date range.
+  No independent candle agreement claimed.
+- Added strict raw-boundary equality transformation from October 6 signal session.
+  New diagnostic coverage: 95/95 stocks plus SPY; 19 of 96 responses require 37
+  recorded transformations. Previously valid prices and all closes are unchanged.
+  Original October 5 run remains 72/95 partial, three events, zero outcomes.
+- Added operational full-universe trend, failure categories, recurring names and
+  the unchanged 100-session/80%-complete coverage gate. Performance stays sealed.
+- Diagnosed 4,652 historical complete control trades, 4,433 twenty-bar paths.
+  367/902 matured stopped trades recover later after costs; 143/952 stops fill
+  through gaps. Entry covariates overlap; no stable predictor or optimal stop found.
+- Documented future conditional risk-envelope requirements and explicit limitations;
+  no V1/universe/exit/review-gate change or historical optimization.
+- Final verification: 677 backend tests, 22 frontend tests and five browser
+  scenarios pass; production build, formatting and pip check pass. Retained audit,
+  prospective replay, no-intraday session handling and all 654 preserved file hashes
+  verify. Full delivery details: LOSS_FOUNDATION_MILESTONE.md.
+
 ## 2026-10-06 - Daily prospective research workstation
 
 - Registered additive EXP-005 scanner/benchmark protocol before acquisition in

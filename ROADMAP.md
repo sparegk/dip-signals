@@ -1,5 +1,16 @@
 # Roadmap
 
+- [x] Audit all 23 retained prospective failures and exact affected candles
+- [x] Paired raw-boundary adjustment with strict validation and provenance
+- [x] Operational coverage history, recurring failures and registered gate display
+- [x] Historical loss/MAE/ATR/gap/recovery diagnosis and risk-envelope research design
+- [ ] Confirm sustained timely 95/95 original prospective collection
+- [ ] Independent affected-candle price and full historical identity validation
+- [ ] Separately register training-only flexible risk-envelope research after foundations stabilize
+
+New diagnostic 95/95 coverage is not prospective gate satisfaction. No optimal
+stop, stable loss predictor, V1 improvement or edge has been established.
+
 - [x] EXP-004 dashboard comparisons and separate evidence scorecard
 - [x] Exploratory post-mortem, hypothesis registry and causal archive context foundation
 - [x] Register an authorized EXP-005 prospective protocol with risk acceptance criteria

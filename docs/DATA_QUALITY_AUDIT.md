@@ -127,3 +127,315 @@ Reproduce/check (offline after the recorded acquisition):
 .\.venv\Scripts\python.exe -W error -m scripts.audit_exp003 --root data/exp003/diagnostic_authorized
 .\.venv\Scripts\python.exe -m scripts.report_exp003 --check-doc docs/DATA_QUALITY_AUDIT.md
 ```
+
+<!-- CURRENT_FAILURE_AUDIT_START -->
+## 2026-10-06 retained EXP-005 failure investigation
+
+Confirmed: **23 failed names, 41 exact offending candles**, all close-boundary
+violations of one binary64 spacing unit. No observed open-boundary, inverted range,
+missing, stale, duplicate or session defect explains these 23 original rejections.
+Original run `exp005-2026-10-05` remains **72/95, partial**, not repaired.
+All original failure inputs, attempts, code identity and configuration hashes remain
+immutable. This report supplements, and does not replace, EXP-003 findings above.
+
+Each name was measured independently:
+
+| Ticker | Affected candles | Classification | Max spacing units | Independent price check |
+| --- | --- | --- | --- | --- |
+| ABBV | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| ABT | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| AMT | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| BAC | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| CMCSA | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| DUK | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| GM | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| IBM | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| KO | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| LMT | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| MDT | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| MMM | 2 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| MO | 3 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| MRK | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| NEE | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| PFE | 2 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| PG | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| PM | 3 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| T | 11 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| TXN | 2 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| VZ | 2 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| WFC | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+| XOM | 1 | one_spacing_adjusted_close_boundary | 1 | unavailable (Stooq browser challenge) |
+
+<details><summary>Every original malformed candle (17 significant digits)</summary>
+
+These are the original adjusted returned prices. The raw tie confirmation is from
+a **new** paired vintage, not a reconstruction of absent original unadjusted prices.
+
+| Ticker | Session | open | high | low | close | rule | absolute_gap | new raw boundary=close |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| ABBV | 2019-01-11 | 63.113115639731404 | 63.668254852294915 | 63.113115639731404 | 63.668254852294922 | close_gt_high | 7.1054273576010019e-15 | True |
+| ABT | 2018-12-27 | 59.423804552689695 | 61.35218429565429 | 58.885244107392893 | 61.352184295654297 | close_gt_high | 7.1054273576010019e-15 | True |
+| AMT | 2017-08-17 | 110.37590918035346 | 110.75157368640454 | 109.29586029052736 | 109.29586029052734 | close_lt_low | 1.4210854715202004e-14 | True |
+| BAC | 2019-12-16 | 29.688860501064188 | 29.807785315335266 | 29.476493835449222 | 29.476493835449219 | close_lt_low | 3.5527136788005009e-15 | True |
+| CMCSA | 2017-11-28 | 26.223099602779257 | 26.731929779052731 | 26.001869743868692 | 26.731929779052734 | close_gt_high | 3.5527136788005009e-15 | True |
+| DUK | 2016-11-07 | 51.852343259301378 | 52.731986999511712 | 51.245924699560391 | 52.731986999511719 | close_gt_high | 7.1054273576010019e-15 | True |
+| GM | 2017-02-06 | 30.525466423611849 | 30.877588272094723 | 30.399707935259851 | 30.877588272094727 | close_gt_high | 3.5527136788005009e-15 | True |
+| IBM | 2017-02-14 | 114.48879196778518 | 115.48898315429686 | 114.34774946644295 | 115.48898315429688 | close_gt_high | 1.4210854715202004e-14 | True |
+| KO | 2016-12-07 | 29.985513305399596 | 30.540252685546871 | 29.963321811539437 | 30.540252685546875 | close_gt_high | 3.5527136788005009e-15 | True |
+| LMT | 2017-06-27 | 218.90268192180119 | 219.60016118574387 | 217.7349548339844 | 217.73495483398438 | close_lt_low | 2.8421709430404007e-14 | True |
+| MDT | 2017-10-06 | 62.47291273950681 | 62.661342620849602 | 62.229523893185785 | 62.661342620849609 | close_gt_high | 7.1054273576010019e-15 | True |
+| MMM | 2017-06-06 | 126.98129691592773 | 127.38195346194927 | 126.61147308349611 | 126.61147308349609 | close_lt_low | 1.4210854715202004e-14 | True |
+| MMM | 2017-08-30 | 125.79608319247693 | 126.27342987060545 | 125.22574028999324 | 126.27342987060547 | close_gt_high | 1.4210854715202004e-14 | True |
+| MO | 2017-03-30 | 37.267084157564625 | 37.297759614885038 | 36.837612152099616 | 36.837612152099609 | close_lt_low | 7.1054273576010019e-15 | True |
+| MO | 2017-05-31 | 38.468573311376289 | 38.570831298828118 | 38.095342384221389 | 38.570831298828125 | close_gt_high | 7.1054273576010019e-15 | True |
+| MO | 2019-10-17 | 25.525173319624724 | 25.746118545532223 | 25.31003928985308 | 25.746118545532227 | close_gt_high | 3.5527136788005009e-15 | True |
+| MRK | 2020-08-07 | 63.47753675812276 | 63.658245086669915 | 62.880392007439873 | 63.658245086669922 | close_gt_high | 7.1054273576010019e-15 | True |
+| NEE | 2017-12-07 | 31.62961831064807 | 31.719856262207028 | 31.485236364214881 | 31.719856262207031 | close_gt_high | 3.5527136788005009e-15 | True |
+| PFE | 2018-12-27 | 27.380161837284451 | 28.061227798461911 | 27.019983786541058 | 28.061227798461914 | close_gt_high | 3.5527136788005009e-15 | True |
+| PFE | 2019-11-04 | 26.039606799917419 | 26.059788939608648 | 25.582181930541996 | 25.582181930541992 | close_lt_low | 3.5527136788005009e-15 | True |
+| PG | 2018-04-12 | 62.714257465639363 | 62.762104647304703 | 62.036396026611335 | 62.036396026611328 | close_lt_low | 7.1054273576010019e-15 | True |
+| PM | 2018-10-09 | 56.785821092118212 | 57.059506230089042 | 56.492111206054695 | 56.492111206054688 | close_lt_low | 7.1054273576010019e-15 | True |
+| PM | 2019-06-21 | 53.823421581151059 | 55.196006774902337 | 53.217252977836573 | 55.196006774902344 | close_gt_high | 7.1054273576010019e-15 | True |
+| PM | 2020-02-27 | 60.931725689854659 | 62.791411587368415 | 59.646457672119148 | 59.646457672119141 | close_lt_low | 7.1054273576010019e-15 | True |
+| T | 2016-10-14 | 15.057325958078845 | 15.122277681982851 | 14.984732627868654 | 14.984732627868652 | close_lt_low | 1.7763568394002505e-15 | True |
+| T | 2016-11-21 | 14.392527763167527 | 14.419272422790526 | 14.312292819449159 | 14.419272422790527 | close_gt_high | 1.7763568394002505e-15 | True |
+| T | 2017-06-29 | 14.925700974017087 | 14.969055596632492 | 14.827168464660646 | 14.827168464660645 | close_lt_low | 1.7763568394002505e-15 | True |
+| T | 2017-07-06 | 15.071854091146584 | 15.115958331463244 | 14.907463073730471 | 14.907463073730469 | close_lt_low | 1.7763568394002505e-15 | True |
+| T | 2018-01-26 | 15.539418857892304 | 15.688756942749022 | 15.497936987720889 | 15.688756942749023 | close_gt_high | 1.7763568394002505e-15 | True |
+| T | 2018-02-08 | 15.302961531544419 | 15.327850853310842 | 14.75539016723633 | 14.755390167236328 | close_lt_low | 1.7763568394002505e-15 | True |
+| T | 2018-02-28 | 15.423266384453903 | 15.423266384453903 | 15.058218002319338 | 15.058218002319336 | close_lt_low | 1.7763568394002505e-15 | True |
+| T | 2018-03-21 | 15.074807605319547 | 15.14117983043703 | 14.933766365051271 | 14.93376636505127 | close_lt_low | 1.7763568394002505e-15 | True |
+| T | 2019-04-16 | 14.750756657968417 | 14.810457229614256 | 14.668093435897392 | 14.810457229614258 | close_gt_high | 1.7763568394002505e-15 | True |
+| T | 2021-11-18 | 14.113675142275493 | 14.148056414736658 | 13.976148605346681 | 13.97614860534668 | close_lt_low | 1.7763568394002505e-15 | True |
+| T | 2022-04-26 | 15.374659140720128 | 15.532752411292231 | 15.256087303161623 | 15.256087303161621 | close_lt_low | 1.7763568394002505e-15 | True |
+| TXN | 2017-01-11 | 57.207037709816028 | 57.63624191284179 | 57.069078380633648 | 57.636241912841797 | close_gt_high | 7.1054273576010019e-15 | True |
+| TXN | 2017-02-24 | 59.344215488934964 | 59.575603485107415 | 58.927710034315552 | 59.575603485107422 | close_gt_high | 7.1054273576010019e-15 | True |
+| VZ | 2017-08-04 | 29.707675579955897 | 29.927959442138668 | 29.456797255627261 | 29.927959442138672 | close_gt_high | 3.5527136788005009e-15 | True |
+| VZ | 2017-08-17 | 29.597532591401389 | 29.646485596452049 | 29.303821563720707 | 29.303821563720703 | close_lt_low | 3.5527136788005009e-15 | True |
+| WFC | 2018-01-30 | 51.517795826738364 | 51.911482175404501 | 51.399688720703132 | 51.399688720703125 | close_lt_low | 7.1054273576010019e-15 | True |
+| XOM | 2018-02-27 | 54.260654227964345 | 54.858210154668988 | 53.230388641357429 | 53.230388641357422 | close_lt_low | 7.1054273576010019e-15 | True |
+
+
+Paired raw/adjusted-close operands at each original offending date (new vintage):
+
+| Ticker | Session | Open | High | Low | Close | Adj Close | Dividends | Stock Splits | factor | round_trip_close |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| ABBV | 2019-01-11 | 87.540000915527344 | 88.30999755859375 | 87.540000915527344 | 88.30999755859375 | 63.668243408203125 | 0 | 0 | 0.72096302987619487 | 63.668243408203125 |
+| ABT | 2018-12-27 | 68.410003662109375 | 70.629997253417969 | 67.790000915527344 | 70.629997253417969 | 61.352210998535156 | 0 | 0 | 0.86864240951908245 | 61.352210998535156 |
+| AMT | 2017-08-17 | 141.02999877929688 | 141.50999450683594 | 139.64999389648438 | 139.64999389648438 | 109.29584503173828 | 0 | 0 | 0.78264124460151341 | 109.29584503173828 |
+| BAC | 2019-12-16 | 34.950000762939453 | 35.090000152587891 | 34.700000762939453 | 34.700000762939453 | 29.476484298706055 | 0 | 0 | 0.84946638762578197 | 29.476484298706055 |
+| CMCSA | 2017-11-28 | 33.327083587646484 | 33.973758697509766 | 33.045921325683594 | 33.973758697509766 | 26.731931686401367 | 0 | 0 | 0.7868405708185825 | 26.731931686401367 |
+| DUK | 2016-11-07 | 77.80999755859375 | 79.129997253417969 | 76.900001525878906 | 79.129997253417969 | 52.732013702392578 | 0 | 0 | 0.6663972644092927 | 52.732013702392578 |
+| GM | 2017-02-06 | 36.409999847412109 | 36.830001831054688 | 36.259998321533203 | 36.830001831054688 | 30.877592086791992 | 0 | 0 | 0.83838149746591428 | 30.877592086791992 |
+| IBM | 2017-02-14 | 170.71701049804688 | 172.20841979980469 | 170.50669860839844 | 172.20841979980469 | 115.48896789550781 | 0 | 0 | 0.67063485066389761 | 115.4889678955078 |
+| KO | 2016-12-07 | 40.540000915527344 | 41.290000915527344 | 40.509998321533203 | 41.290000915527344 | 30.540258407592773 | 0 | 0 | 0.73965264544491527 | 30.540258407592773 |
+| LMT | 2017-06-27 | 279.32000732421875 | 280.20999145507812 | 277.82998657226562 | 277.82998657226562 | 217.73506164550781 | 0 | 0 | 0.78369892440992261 | 217.73506164550781 |
+| MDT | 2017-10-06 | 79.569999694824219 | 79.80999755859375 | 79.260002136230469 | 79.80999755859375 | 62.661342620849609 | 0 | 0 | 0.78513149401922744 | 62.661342620849602 |
+| MMM | 2017-06-06 | 172.24916076660156 | 172.79264831542969 | 171.74749755859375 | 171.74749755859375 | 126.61144256591797 | 0 | 0 | 0.73719526843599537 | 126.61144256591798 |
+| MMM | 2017-08-30 | 169.66555786132812 | 170.30937194824219 | 168.89631652832031 | 170.30937194824219 | 126.27342224121094 | 0 | 0 | 0.74143554636315623 | 126.27342224121094 |
+| MO | 2017-03-30 | 72.889999389648438 | 72.949996948242188 | 72.050003051757812 | 72.050003051757812 | 36.837593078613281 | 0 | 0 | 0.51127816125352055 | 36.837593078613281 |
+| MO | 2017-05-31 | 75.239997863769531 | 75.44000244140625 | 74.510002136230469 | 75.44000244140625 | 38.570846557617188 | 0 | 0 | 0.51127843729293232 | 38.570846557617188 |
+| MO | 2019-10-17 | 43.900001525878906 | 44.279998779296875 | 43.529998779296875 | 44.279998779296875 | 25.746118545532227 | 0 | 0 | 0.58143900757219147 | 25.746118545532223 |
+| MRK | 2020-08-07 | 77.089698791503906 | 77.309158325195312 | 76.364501953125 | 77.309158325195312 | 63.658252716064453 | 0 | 0 | 0.82342446994818741 | 63.658252716064453 |
+| NEE | 2017-12-07 | 39.432498931884766 | 39.544998168945312 | 39.252498626708984 | 39.544998168945312 | 31.719858169555664 | 0 | 0 | 0.80212061292912817 | 31.719858169555664 |
+| PFE | 2018-12-27 | 39.667930603027344 | 40.654647827148438 | 39.146110534667969 | 40.654647827148438 | 28.06121826171875 | 0 | 0 | 0.69023395261045595 | 28.06121826171875 |
+| PFE | 2019-11-04 | 36.726753234863281 | 36.755218505859375 | 36.081592559814453 | 36.081592559814453 | 25.582181930541992 | 0 | 0 | 0.70900922369579433 | 25.582181930541996 |
+| PG | 2018-04-12 | 78.639999389648438 | 78.699996948242188 | 77.790000915527344 | 77.790000915527344 | 62.036430358886719 | 0 | 0 | 0.79748591886831921 | 62.036430358886719 |
+| PM | 2018-10-09 | 85.069999694824219 | 85.480003356933594 | 84.629997253417969 | 84.629997253417969 | 56.492118835449219 | 0 | 0 | 0.66751885464781413 | 56.492118835449219 |
+| PM | 2019-06-21 | 77.25 | 79.220001220703125 | 76.379997253417969 | 79.220001220703125 | 55.195987701416016 | 0 | 0 | 0.69674308067280433 | 55.195987701416016 |
+| PM | 2020-02-27 | 84.860000610351562 | 87.449996948242188 | 83.069999694824219 | 83.069999694824219 | 59.646461486816406 | 0 | 0 | 0.71802650422463832 | 59.646461486816406 |
+| T | 2016-10-14 | 29.765861511230469 | 29.894260406494141 | 29.622356414794922 | 29.622356414794922 | 14.984728813171387 | 0 | 0 | 0.50585877110327537 | 14.984728813171385 |
+| T | 2016-11-21 | 28.451662063598633 | 28.504531860351562 | 28.293050765991211 | 28.504531860351562 | 14.419271469116211 | 0 | 0 | 0.50585891183053344 | 14.419271469116213 |
+| T | 2017-06-29 | 28.602718353271484 | 28.685800552368164 | 28.413896560668945 | 28.413896560668945 | 14.827170372009277 | 0 | 0 | 0.52182812520452859 | 14.827170372009279 |
+| T | 2017-07-06 | 28.391239166259766 | 28.474319458007812 | 28.081571578979492 | 28.081571578979492 | 14.907461166381836 | 0.48999999999999999 | 0 | 0.53086278039868828 | 14.907461166381836 |
+| T | 2018-01-26 | 28.293050765991211 | 28.56495475769043 | 28.217523574829102 | 28.56495475769043 | 15.688754081726074 | 0 | 0 | 0.54923083949580742 | 15.688754081726072 |
+| T | 2018-02-08 | 27.862537384033203 | 27.907854080200195 | 26.865558624267578 | 26.865558624267578 | 14.755393981933594 | 0 | 0 | 0.549230864256256 | 14.755393981933594 |
+| T | 2018-02-28 | 28.081571578979492 | 28.081571578979492 | 27.41691780090332 | 27.41691780090332 | 15.058215141296387 | 0 | 0 | 0.54923077971952983 | 15.058215141296388 |
+| T | 2018-03-21 | 27.44713020324707 | 27.567975997924805 | 27.190332412719727 | 27.190332412719727 | 14.933771133422852 | 0 | 0 | 0.5492309143832601 | 14.93377113342285 |
+| T | 2019-04-16 | 24.259819030761719 | 24.358005523681641 | 24.123867034912109 | 24.358005523681641 | 14.810458183288574 | 0 | 0 | 0.60803246673416544 | 14.810458183288576 |
+| T | 2021-11-18 | 18.602718353271484 | 18.648035049438477 | 18.421449661254883 | 18.421449661254883 | 13.976147651672363 | 0 | 0 | 0.75868880618379619 | 13.976147651672363 |
+| T | 2022-04-26 | 19.450000762939453 | 19.649999618530273 | 19.299999237060547 | 19.299999237060547 | 15.256084442138672 | 0 | 0 | 0.79047072773160498 | 15.256084442138672 |
+| TXN | 2017-01-11 | 74.639999389648438 | 75.199996948242188 | 74.459999084472656 | 75.199996948242188 | 57.636234283447266 | 0 | 0 | 0.76643931678769195 | 57.636234283447259 |
+| TXN | 2017-02-24 | 76.94000244140625 | 77.239997863769531 | 76.400001525878906 | 77.239997863769531 | 59.575592041015625 | 0 | 0 | 0.77130494159374341 | 59.575592041015625 |
+| VZ | 2017-08-04 | 48.549999237060547 | 48.909999847412109 | 48.139999389648438 | 48.909999847412109 | 29.927957534790039 | 0 | 0 | 0.6118985407515507 | 29.927957534790036 |
+| VZ | 2017-08-17 | 48.369998931884766 | 48.450000762939453 | 47.889999389648438 | 47.889999389648438 | 29.303821563720703 | 0 | 0 | 0.61189855788669756 | 29.303821563720707 |
+| WFC | 2018-01-30 | 65.430000305175781 | 65.930000305175781 | 65.279998779296875 | 65.279998779296875 | 51.399681091308594 | 0 | 0 | 0.78737258046042835 | 51.399681091308594 |
+| XOM | 2018-02-27 | 79 | 79.870002746582031 | 77.5 | 77.5 | 53.230381011962891 | 0 | 0 | 0.6868436259608115 | 53.230381011962891 |
+
+
+Every reproduced new-vintage failure and its adjustment arithmetic:
+
+| ticker | session | raw_open | raw_high | raw_low | raw_close | adjusted_close | factor | round_trip_close | rule | absolute_gap | spacing_units |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| ABBV | 2017-07-19T00:00:00 | 72.480003356933594 | 72.769996643066406 | 72.019996643066406 | 72.769996643066406 | 50.145561218261719 | 0.68909665427392364 | 50.145561218261712 | close_gt_high | 7.1054273576010019e-15 | 1 |
+| DUK | 2017-06-30T00:00:00 | 84.150001525878906 | 84.419998168945312 | 83.589996337890625 | 83.589996337890625 | 57.554634094238281 | 0.68853495173739188 | 57.554634094238288 | close_lt_low | 7.1054273576010019e-15 | 1 |
+| DUK | 2020-05-12T00:00:00 | 82.489997863769531 | 83.660003662109375 | 81.879997253417969 | 81.879997253417969 | 63.456729888916016 | 0.77499672713126655 | 63.456729888916023 | close_lt_low | 7.1054273576010019e-15 | 1 |
+| IBM | 2017-01-27T00:00:00 | 170.62141418457031 | 171.31930541992188 | 169.50286865234375 | 169.50286865234375 | 112.78274536132812 | 0.66537366746665183 | 112.78274536132814 | close_lt_low | 1.4210854715202004e-14 | 1 |
+| IBM | 2017-02-14T00:00:00 | 170.71701049804688 | 172.20841979980469 | 170.50669860839844 | 172.20841979980469 | 115.48896789550781 | 0.67063485066389761 | 115.4889678955078 | close_gt_high | 1.4210854715202004e-14 | 1 |
+| MDT | 2017-10-06T00:00:00 | 79.569999694824219 | 79.80999755859375 | 79.260002136230469 | 79.80999755859375 | 62.661342620849609 | 0.78513149401922744 | 62.661342620849602 | close_gt_high | 7.1054273576010019e-15 | 1 |
+| MMM | 2017-06-06T00:00:00 | 172.24916076660156 | 172.79264831542969 | 171.74749755859375 | 171.74749755859375 | 126.61144256591797 | 0.73719526843599537 | 126.61144256591798 | close_lt_low | 1.4210854715202004e-14 | 1 |
+| MO | 2016-12-20T00:00:00 | 67.150001525878906 | 67.339996337890625 | 66.330001831054688 | 67.339996337890625 | 34.154777526855469 | 0.50719898105544414 | 34.154777526855462 | close_gt_high | 7.1054273576010019e-15 | 1 |
+| MO | 2019-10-17T00:00:00 | 43.900001525878906 | 44.279998779296875 | 43.529998779296875 | 44.279998779296875 | 25.746118545532227 | 0.58143900757219147 | 25.746118545532223 | close_gt_high | 3.5527136788005009e-15 | 1 |
+| NEE | 2018-02-27T00:00:00 | 38.680000305175781 | 38.867500305175781 | 37.919998168945312 | 37.919998168945312 | 30.634031295776367 | 0.8078595141089483 | 30.634031295776371 | close_lt_low | 3.5527136788005009e-15 | 1 |
+| PFE | 2019-11-04T00:00:00 | 36.726753234863281 | 36.755218505859375 | 36.081592559814453 | 36.081592559814453 | 25.582181930541992 | 0.70900922369579433 | 25.582181930541996 | close_lt_low | 3.5527136788005009e-15 | 1 |
+| PM | 2019-10-22T00:00:00 | 81.540000915527344 | 81.970001220703125 | 81.169998168945312 | 81.169998168945312 | 57.488819122314453 | 0.70825206873429503 | 57.48881912231446 | close_lt_low | 7.1054273576010019e-15 | 1 |
+| T | 2016-11-15T00:00:00 | 27.311178207397461 | 27.771902084350586 | 27.296073913574219 | 27.771902084350586 | 14.048666954040527 | 0.50585901215447981 | 14.048666954040526 | close_gt_high | 1.7763568394002505e-15 | 1 |
+| T | 2016-12-05T00:00:00 | 29.229606628417969 | 29.44108772277832 | 29.176736831665039 | 29.176736831665039 | 14.759309768676758 | 0.50585882354940803 | 14.75930976867676 | close_lt_low | 1.7763568394002505e-15 | 1 |
+| T | 2017-01-09T00:00:00 | 31.185800552368164 | 31.268882751464844 | 30.815710067749023 | 30.815710067749023 | 15.829182624816895 | 0.51367249334888232 | 15.829182624816896 | close_lt_low | 1.7763568394002505e-15 | 1 |
+| T | 2017-06-29T00:00:00 | 28.602718353271484 | 28.685800552368164 | 28.413896560668945 | 28.413896560668945 | 14.827170372009277 | 0.52182812520452859 | 14.827170372009279 | close_lt_low | 1.7763568394002505e-15 | 1 |
+| T | 2017-07-19T00:00:00 | 27.212991714477539 | 27.288520812988281 | 27.04682731628418 | 27.288520812988281 | 14.486456871032715 | 0.53086266457277964 | 14.486456871032713 | close_gt_high | 1.7763568394002505e-15 | 1 |
+| T | 2018-01-26T00:00:00 | 28.293050765991211 | 28.56495475769043 | 28.217523574829102 | 28.56495475769043 | 15.688754081726074 | 0.54923083949580742 | 15.688754081726072 | close_gt_high | 1.7763568394002505e-15 | 1 |
+| T | 2018-02-28T00:00:00 | 28.081571578979492 | 28.081571578979492 | 27.41691780090332 | 27.41691780090332 | 15.058215141296387 | 0.54923077971952983 | 15.058215141296388 | close_lt_low | 1.7763568394002505e-15 | 1 |
+| T | 2018-04-23T00:00:00 | 26.216011047363281 | 26.351964950561523 | 26.125377655029297 | 26.351964950561523 | 14.747315406799316 | 0.55962868174978619 | 14.747315406799315 | close_gt_high | 1.7763568394002505e-15 | 1 |
+| T | 2018-07-24T00:00:00 | 23.602718353271484 | 23.927492141723633 | 23.421449661254883 | 23.927492141723633 | 13.66736888885498 | 0.5711993888829856 | 13.667368888854979 | close_gt_high | 1.7763568394002505e-15 | 1 |
+| T | 2018-09-21T00:00:00 | 25.717523574829102 | 25.861026763916016 | 25.513595581054688 | 25.513595581054688 | 14.573352813720703 | 0.57119949116628066 | 14.573352813720705 | close_lt_low | 1.7763568394002505e-15 | 1 |
+| T | 2018-10-09T00:00:00 | 25.445619583129883 | 25.45317268371582 | 25.302114486694336 | 25.302114486694336 | 14.73859977722168 | 0.58250466714836391 | 14.738599777221681 | close_lt_low | 1.7763568394002505e-15 | 1 |
+| T | 2019-01-15T00:00:00 | 23.051359176635742 | 23.111782073974609 | 22.832326889038086 | 23.111782073974609 | 13.759750366210938 | 0.5953565295038552 | 13.759750366210936 | close_gt_high | 1.7763568394002505e-15 | 1 |
+| TXN | 2017-01-11T00:00:00 | 74.639999389648438 | 75.199996948242188 | 74.459999084472656 | 75.199996948242188 | 57.636234283447266 | 0.76643931678769195 | 57.636234283447259 | close_gt_high | 7.1054273576010019e-15 | 1 |
+| VZ | 2017-08-04T00:00:00 | 48.549999237060547 | 48.909999847412109 | 48.139999389648438 | 48.909999847412109 | 29.927957534790039 | 0.6118985407515507 | 29.927957534790036 | close_gt_high | 3.5527136788005009e-15 | 1 |
+| VZ | 2017-08-17T00:00:00 | 48.369998931884766 | 48.450000762939453 | 47.889999389648438 | 47.889999389648438 | 29.303821563720703 | 0.61189855788669756 | 29.303821563720707 | close_lt_low | 3.5527136788005009e-15 | 1 |
+| VZ | 2018-02-27T00:00:00 | 49.020000457763672 | 49.169998168945312 | 48.040000915527344 | 48.040000915527344 | 30.087091445922852 | 0.62629248277549876 | 30.087091445922855 | close_lt_low | 3.5527136788005009e-15 | 1 |
+| XOM | 2016-12-09T00:00:00 | 88.639999389648438 | 89 | 88.180000305175781 | 89 | 58.291358947753906 | 0.65495908930060565 | 58.291358947753899 | close_gt_high | 7.1054273576010019e-15 | 1 |
+| XOM | 2018-01-26T00:00:00 | 88.639999389648438 | 89 | 88.470001220703125 | 89 | 60.510307312011719 | 0.67989109339339004 | 60.510307312011712 | close_gt_high | 7.1054273576010019e-15 | 1 |
+
+</details>
+
+The original configuration hash is `933568a3bc8881bd30c16cce3efa80bfacc68f0094cba21becd280b353a81312`;
+code revision `5526304dae77771e708340899fe50feac9816fdc`. The immutable audit envelope
+also retains every original source hash, provider, collection timestamp, error and
+session. Original raw objects live under `data/paper_archive/objects/`; new paired,
+SEC and independent-request responses under `data/current_failure_audit/objects/`.
+
+<details><summary>Per-ticker retained references and identity/action checks</summary>
+
+| Ticker | Collected UTC | Original raw SHA256 | New paired SHA256 |
+| --- | --- | --- | --- |
+| ABBV | 2026-10-06T11:19:06.382957+00:00 | acb95e00fa2fa5871d81217ab0f100ab1708f9e566405433a5a2914c0f86afcb | f1c11ae4704908fbbef56d39f6c67790664edc57b5be0d6a9f2400d1732d5b23 |
+| ABT | 2026-10-06T11:19:06.850388+00:00 | 05ce7992d4e4f1b742db82bd669b46bee5aeabfd568b54e5daa0c10fc752e453 | 33d912fc5231acd9b3b6b62af64e90cdc194eac40f10eab92e3187af1e0b16be |
+| AMT | 2026-10-06T11:19:09.684988+00:00 | ee898d683f81e961aaa15156dcab8e190ed446edaf605074d91709bb42c7ba07 | fa0807e03a0db43b9041044396955fbc2742c2a58c3fe9fad5e401e8a85a0eda |
+| BAC | 2026-10-06T11:19:12.169046+00:00 | c96bea613da805a88a23234bb624114d3cace3836c638d9cf5b41323b6c188ff | 56a6604dc867771eeba4eb6423f392af137d1c1711a5327e1e66d8ecc557a3cc |
+| CMCSA | 2026-10-06T11:19:16.015586+00:00 | a774589cb1a485a578e439bb37858b6b16a15df590188cba500595a625d364c7 | dba1ee040eb3ff9db3bb8c3997562d83bcd7b543e1ded85e0b9e63666abaeb28 |
+| DUK | 2026-10-06T11:19:21.969209+00:00 | 06b898c657d4eef1acbe3a2a7e15f877230201b5a85e4d038f93e5077ce00506 | 31ca43635d3d857dbcd0c7eb00b1c5d7647df662c3ac8ed6376beb73bccdbb81 |
+| GM | 2026-10-06T11:19:25.303190+00:00 | 6b40ccd6c3526b96ee6cff5615d4d3e1816dfb4050f20635e6005485b77c23c6 | 50d5037b19e5da57f8a5022a04e374b17cd8829c4024790bec4369b7147d580d |
+| IBM | 2026-10-06T11:19:26.780905+00:00 | 44deb021e4498b0b8da957fc5e6aa9009cfb2f72e6233c397bf52ab9d1caf200 | 43606b9b33ef7a1505360aaf0490e59aa402c37c81cf782e30a84b06dba87c6d |
+| KO | 2026-10-06T11:19:29.826570+00:00 | fd3cebea4cd3d05f146a5239a7046b6c9a0f5365373603ddd25db10199f122b9 | 510d617fa61051c5e5b03fce3948e1b22bb1aea0d9534dc1d56f6b97b15a789d |
+| LMT | 2026-10-06T11:19:31.184626+00:00 | bb111cf84e818de8a1471b3d44e4cb85b7aa75fb4e1bff7f3de125b09f9403ce | 13fc73dbe9b91db6d1286ebe186c1c40b52b332f3dfc841bc244d985aa7b4a83 |
+| MDT | 2026-10-06T11:19:34.163185+00:00 | a0776bebd9c5ba94af616089163d6b2852bf5434d223116ee060f7eeaa7bf2b3 | 43532b0f03979bb4669865b23eb3544ffc4e205f858f424f9d6c9f8347300f25 |
+| MMM | 2026-10-06T11:19:35.005537+00:00 | 05cd2c5e6d47d90c37677fd49503f275093d4b48219f48089950d6ff00338f12 | 206f01595b23ed8c4d30bd58a8ddf67860c79842989d828842751cb18a0bc03a |
+| MO | 2026-10-06T11:19:35.500641+00:00 | 3b8513b56e2dc4e90fdf4d6768613683326fc45cf3e518fd29805d29c7f06a12 | 9f38db620a4de4529a1f21a0fb4a4a1d8917fb794bb509b0e3775f78ced53628 |
+| MRK | 2026-10-06T11:19:35.963732+00:00 | af00e122747cbdd6817c835ca60c730559b4c74b7e1e8d0278164228d94a33a8 | a7710dc44b151af9209c1275d05e6d9fe1ef37111f9587bdd3c2fe5fe1c42694 |
+| NEE | 2026-10-06T11:19:37.500491+00:00 | f1ba145030c30bc7db902ebffffb5efeecf6daa63771e96b73d057c132f5fb4a | 48c620ee2009779ea10787bdd608fb203706bc394a88a9c78d754347cdf4c523 |
+| PFE | 2026-10-06T11:19:40.290577+00:00 | db4eb163059f9118d6f8a35bb0db831eada6b279005b818e367a3d2dd735e5d8 | a5721b7d689e41a85c78d82795ed543ea220205d485758d66a29944554df1f36 |
+| PG | 2026-10-06T11:19:40.795692+00:00 | 6bdaf337daa5e2ff54fd2d0ea345f269ae70e7634a12a7195014c9f731f84559 | e9ee0f508c2abd8c331b496c924ba6189be56b62c2e30cda092b58f6bbac85a3 |
+| PM | 2026-10-06T11:19:41.553625+00:00 | 620ebeff5572a3ff1782baf5be9aa1bc9afa34ea75d3cf90c2f58985cf0aca63 | 2fbd6b2782590a7989ec5a68ff08a2e709fe6679259028df40293b1723e01857 |
+| T | 2026-10-06T11:19:44.960847+00:00 | 6c5bba6608ddbdc3639bb94df0aba037c25d1dbfa91728d451b3ec0468d7dc6e | 972c512eee265f2587f21dc7754dfca06fc189b799590d37669c339296a6af9e |
+| TXN | 2026-10-06T11:19:46.677500+00:00 | 74fa776892f19be250a3f2877c5d85851872f1b058e4a54366b9b9dfbdfeb7a4 | 939efedfe915c94b446663cef26608d4b1c7b0a72af73542cfa8ac2c7b06464c |
+| VZ | 2026-10-06T11:19:50.326736+00:00 | c8d5d7efa27269a209aa03f260cf4894883b9245cfd7b9144b5d29be12c1eabc | fef43f3136c29d77a9b134ae4c09dfb8cdd9b7234ad4c3372a819b46014863a4 |
+| WFC | 2026-10-06T11:19:51.014983+00:00 | 174a37c6193da92aa93d1be3296d34dd60f4deffd35bd1a5a6113ad946c5d8fd | 41679adff8b1c8587c81df40f51f2e1c7c517b34bae3b7807ca90be5ce7a65c1 |
+| XOM | 2026-10-06T11:19:52.047057+00:00 | aa28f613ef1a62643d727ac533234ef0629683fa3d9b95e50320a51f774b3624 | 22d26b062b8dd4483b679e66ba78d4638fa1aeb816cc326c7b9f1e507792b889 |
+
+| Ticker | Current issuer | CIK | Exchange | Share class | SEC former names | Dividend rows | Split rows |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| ABBV | AbbVie Inc. | 1551152 | NYSE | common / ordinary; full share-class history unresolved | none reported | 40 | 0 |
+| ABT | ABBOTT LABORATORIES | 1800 | NYSE | common / ordinary; full share-class history unresolved | none reported | 40 | 0 |
+| AMT | AMERICAN TOWER CORP /MA/ | 1053507 | NYSE | common / ordinary; full share-class history unresolved | AMERICAN TOWER SYSTEMS CORP | 40 | 0 |
+| BAC | BANK OF AMERICA CORP /DE/ | 70858 | NYSE | common / ordinary; full share-class history unresolved | BANKAMERICA CORP/DE/; NATIONSBANK CORP | 40 | 0 |
+| CMCSA | COMCAST CORP | 1166691 | Nasdaq | Class A common | AT&T COMCAST CORP | 40 | 2 |
+| DUK | Duke Energy CORP | 1326160 | NYSE | common / ordinary; full share-class history unresolved | Duke Energy Holding Corp.; Deer Holding Corp. | 40 | 0 |
+| GM | General Motors Co | 1467858 | NYSE | common / ordinary; full share-class history unresolved | none reported | 31 | 0 |
+| IBM | INTERNATIONAL BUSINESS MACHINES CORP | 51143 | NYSE | common / ordinary; full share-class history unresolved | none reported | 40 | 1 |
+| KO | COCA COLA CO | 21344 | NYSE | common / ordinary; full share-class history unresolved | none reported | 40 | 0 |
+| LMT | LOCKHEED MARTIN CORP | 936468 | NYSE | common / ordinary; full share-class history unresolved | LOCKHEED MARTIN CORP | 40 | 0 |
+| MDT | Medtronic plc | 1613103 | NYSE | common / ordinary; full share-class history unresolved | Medtronic Ltd; Medtronic Holdings Ltd | 39 | 0 |
+| MMM | 3M CO | 66740 | NYSE | common / ordinary; full share-class history unresolved | MINNESOTA MINING & MANUFACTURING CO | 40 | 1 |
+| MO | ALTRIA GROUP, INC. | 764180 | NYSE | common / ordinary; full share-class history unresolved | ALTRIA GROUP INC; PHILIP MORRIS COMPANIES INC | 40 | 0 |
+| MRK | Merck & Co., Inc. | 310158 | NYSE | common / ordinary; full share-class history unresolved | Merck & Co. Inc.; SCHERING PLOUGH CORP | 40 | 1 |
+| NEE | NEXTERA ENERGY INC | 753308 | NYSE | common / ordinary; full share-class history unresolved | FPL GROUP INC | 40 | 1 |
+| PFE | PFIZER INC | 78003 | NYSE | common / ordinary; full share-class history unresolved | PFIZER INC | 40 | 1 |
+| PG | PROCTER & GAMBLE Co | 80424 | NYSE | common / ordinary; full share-class history unresolved | none reported | 40 | 0 |
+| PM | Philip Morris International Inc. | 1413329 | NYSE | common / ordinary; full share-class history unresolved | none reported | 40 | 0 |
+| T | AT&T INC. | 732717 | NYSE | common / ordinary; full share-class history unresolved | SBC COMMUNICATIONS INC; SOUTHWESTERN BELL CORP | 40 | 1 |
+| TXN | TEXAS INSTRUMENTS INC | 97476 | Nasdaq | common / ordinary; full share-class history unresolved | none reported | 40 | 0 |
+| VZ | VERIZON COMMUNICATIONS INC | 732712 | NYSE | common / ordinary; full share-class history unresolved | BELL ATLANTIC CORP | 40 | 0 |
+| WFC | WELLS FARGO & COMPANY/MN | 72971 | NYSE | common / ordinary; full share-class history unresolved | WELLS FARGO & CO/MN; NORWEST CORP | 40 | 0 |
+| XOM | ExxonMobil Holdings Corp | 2115436 | NYSE | common / ordinary; full share-class history unresolved | none reported | 40 | 0 |
+
+</details>
+
+### Arithmetic evidence and narrowly scoped change
+
+Installed yfinance computes `f = Adj Close / Close`, scales Open/High/Low by f,
+and copies Adj Close to Close. For exact raw close/high or close/low ties,
+division followed by multiplication can produce a neighboring float instead of
+Adj Close. New paired responses reproduce **30 such violations** for the 23 names;
+every reproduced violation has exact raw boundary equality and one-step error.
+All **41 original affected dates** also have the corresponding raw equality in
+the new vintage. Changed adjustment factors/vintages alter which dates fail;
+the original factor cannot be conclusively reconstructed without original pairs.
+
+The new data-only policy `raw-boundary-equality-v1` validates unadjusted OHLC
+strictly first, preserves the same installed adjustment calculation, and only
+when an adjusted close-boundary violation has BOTH exact raw equality and exactly
+one adjacent float, assigns that boundary the identical adjusted-close value.
+Every field, before/after value, raw operands, factor and reason is retained.
+Close is unchanged. All previously valid adjusted rows remain bitwise unchanged.
+Strict `clean_data`, Parquet validation and old cache behavior are unchanged.
+No generic epsilon, clipping of malformed raw prices, filling, row deletion or
+strategy threshold change is allowed. Legacy adjusted responses without paired
+evidence remain rejected, including all original failures.
+
+Applied to all new diagnostic vintages: **95/95 stocks plus SPY pass**.
+Of 96 responses, 77 already passed strict adjustment; 19 required 37 recorded
+boundary transformations. These are new diagnostic bytes, **not** an improvement
+of the original prospective coverage record. First effective prospective signal
+session is **2026-10-06**, collected October 7 in the unchanged registered window.
+Future availability, freshness and timely all-name completion are still required.
+The 100-session / 80%-complete gate is not passed by this engineering check.
+
+### Identity findings and remaining uncertainty
+
+The retained [official SEC ticker/exchange mapping](https://www.sec.gov/files/company_tickers_exchange.json)
+and all 23 issuer submission responses confirm current symbol/name/exchange
+associations, not complete historical share-class continuity. CMCSA is listed Class A,
+with unlisted Class B separately documented in its [issuer FAQ](https://cmcsa.gcs-web.com/shareholder-services/faqs).
+Former-name arrays are issuer histories, not a permanent security-level ticker ledger;
+absence of a former name is not proof of no ticker reuse. No symbol is substituted.
+
+Important action/history boundaries: [IBM/Kyndryl, November 2021](https://www.ibm.com/investor/news/ibm-completes-separation-of-kyndryl),
+[3M/Solventum, April 2024](https://news.3m.com/2024-03-08-3M-Board-of-Directors-Approves-Spin-off-of-Solventum),
+[Merck/Organon, June 2021](https://www.merck.com/news/merck-announces-completion-of-organon-co-spinoff/),
+and [AT&T/WarnerMedia, April 2022](https://investors.att.com/stock-information/historical-stock-information/warnermedia-transaction/warnermedia-transaction).
+XOM now maps to ExxonMobil Holdings (CIK 2115436), rather than former CIK 34088;
+the [issuer filing](https://www.sec.gov/Archives/edgar/data/34088/000003408826000093/xom-20260630.htm)
+documents a July 1, 2026 redomiciliation merger. This is an actual identity warning,
+distinct from the 2018 boundary error. Medtronic's holding-company history and
+General Motors' predecessor identity also require security-master care. These
+facts do not establish corporate actions caused the numerical failures.
+Provider unadjusted OHLC may itself already incorporate splits; it is not an
+unrevised exchange tape. Dividend/split rows above are provider-reported counts,
+not independent action-factor validation. Full corporate-action and historical
+security continuity remain unresolved; no PIT claim is made.
+
+### Independent market-price comparison
+
+All 23 Stooq requests returned retained HTML browser-verification responses,
+not CSV bars. No prices were parsed from them and no challenge was bypassed.
+The first Nasdaq historical request returned a retained application-level
+date-range error; a corrected multi-day request returned zero records. Both
+responses remain retained. Neither provides an independent price comparison.
+Thus **primary value vs independent value agreement is unverified for all 41
+candles**. Different vendors' adjustment conventions also require reconciliation
+before comparison. Independent raw-price verification remains an explicit next
+milestone; the transformation fix is supported by exact paired arithmetic, not
+by a claimed independent price match or strategy profitability.
+
+Reproduce offline:
+
+```powershell
+.\.venv\Scripts\python.exe -W error -m scripts.audit_current_failures --universe
+.\.venv\Scripts\python.exe -m scripts.report_loss_foundation
+```
+
+Use `--download --external` for a new root only when a disclosed new vintage is
+needed. Existing records are idempotent; conflicts fail, and failures stay retained.
+<!-- CURRENT_FAILURE_AUDIT_END -->
