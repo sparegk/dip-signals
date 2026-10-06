@@ -29,4 +29,28 @@ Historical data is for hypothesis generation. A future candidate needs a separat
 registration and frozen code/configuration before its first eligible signal. A
 prospective archive written from historical replay remains retrospective.
 
-See [EXP-005 proposal](EXP005_PROPOSAL.md), which has **not** been registered or run.
+See the registered [EXP-005 protocol](EXP005_PROTOCOL.md); the earlier proposal is
+retained as superseded history.
+
+## Post-EXP-005 Edge Development
+
+These are future research priorities, not implemented improvements. Prospective
+results must be reviewed at the existing gates before a new candidate is frozen.
+
+1. Volatility-conditioned signal quality: causal ATR context already exists;
+   higher historical returns also carry larger adverse movement.
+2. Rebound-duration conditioning: confirm the simple ten-bar hold before adding
+   flexible timing. Historical time-only EV exceeded adaptive exits.
+3. Relative-strength context: SPY excess and failed breadth make incremental
+   performance a central question, rather than absolute return alone.
+4. Falling-knife detection: investigate downside mechanisms without using current
+   winners or losses to tune a filter.
+5. Data-driven dynamic exits: MAE/MFE, duration, severity and regime can form a
+   future policy interface, but historical adaptive downside is unfavorable evidence.
+6. Confirmation entry: register causal execution and assess missed rebounds/costs.
+7. Signal-specific risk sizing and portfolio-level selection: require a capital
+   protocol, capacity/overlap assumptions and an independent validation plan.
+8. Repeated-dip/support memory: lower priority because the recorded repeated-zone
+   definition underperformed the no-known-zone group on historical SPY excess.
+
+No combined ranking, new exit, sizing rule or optimization is introduced here.

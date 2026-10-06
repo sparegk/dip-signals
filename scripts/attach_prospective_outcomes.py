@@ -14,7 +14,7 @@ from src.prospective_outcomes import attach_outcome
 from src.sessions import session_facts, utc, utc_now
 
 
-def main() -> None:
+def main() -> Path:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT / "data/paper_archive")
     args = parser.parse_args()
@@ -59,6 +59,7 @@ def main() -> None:
         write_record(args.root / "exp005/outcome_failures" / (now.strftime("%Y%m%dT%H%M%S%f") + ".json"),
                      {"attempted_at": now.isoformat(), "failures": failures})
     print(json.dumps({"attached": attached, "failures": len(failures), "performance": "sealed until registered review"}))
+    return args.root
 
 
 if __name__ == "__main__":

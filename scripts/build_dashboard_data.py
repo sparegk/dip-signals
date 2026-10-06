@@ -313,8 +313,21 @@ def build_dashboard(root: Path = ROOT, output: Path | None = None, *, as_of: str
     docs = documentation(root)
     from src.prospective import operational_summary
     prospective = operational_summary(root / "data/paper_archive", as_of=as_of) if (root / "config/exp005.json").exists() else None
+    if prospective:
+        from src.scanner_outcomes import read_benchmark_review
+        review_paths = sorted((root / "data/paper_archive/exp005/benchmark_reviews").glob("*.json"))
+        prospective["benchmark_review"] = read_benchmark_review(root / "data/paper_archive", review_paths[-1]) if review_paths else None
+        from src.prospective_outcomes import verified_outcomes
+        outcomes = {(o["run_id"], o["ticker"]): o for o in verified_outcomes(root / "data/paper_archive")}
+        for row in prospective["records"]:
+            outcome = outcomes.get((row["run_id"], row["ticker"]))
+            row["horizon_status"] = {str(h): next((r["status"] for r in outcome["forward"] if r["horizon"] == h), "pending")
+                                      if outcome else "pending" for h in prospective["protocol"]["horizons"]}
+    from src.scanner import export_today
+    today = export_today(root, as_of) if (root / "config/scanner.json").exists() else None
     data = {"schema_version": 1, "as_of": as_of, "exp001": exp001, "exp002": exp002,
             "prospective": prospective,
+            "today": today,
             "exp004": export_exp004(root, exp002), "diagnosis": export_diagnosis(root),
             "hypotheses": hypothesis_registry(root),
             "archive": archive, "audit": audit, "feature_catalog": feature_catalog(), **docs}

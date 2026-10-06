@@ -3,6 +3,7 @@
 import argparse
 import json
 from pathlib import Path
+import time
 
 from src.paper_archive import (ROOT, begin_run, capture_input, code_identity, coverage,
                               finish_run, load_protocol, recover_run, verify_run)
@@ -24,7 +25,15 @@ def collect(root: Path, *, session: str, run_id: str, replay_cache: Path | None 
         return result  # no new network request, timestamp, or duplicate observation
     inputs = {}
     for ticker in (config["benchmark"], *intent["universe"]):
-        item = capture_input(root, ticker, config=config, session=session, replay_cache=replay_cache)
+        # Retry transient acquisition failures only. Keep every failed attempt;
+        # malformed OHLC must not become an invisible successful retry.
+        for attempt in range(1, 4):
+            item = capture_input(root, ticker, config=config, session=session, replay_cache=replay_cache)
+            write_record(root / "runs" / run_id / "attempts" / ticker / f"attempt-{attempt}.json", item)
+            transient = str(item.get("error", "")).startswith(("RuntimeError:", "OSError:"))
+            if replay_cache is not None or item["status"] == "available" or not transient or attempt == 3:
+                break
+            time.sleep(attempt)
         inputs[ticker] = item
         write_record(root / "runs" / run_id / "inputs" / (ticker + ".json"), item)
         print(f"{ticker}: {item['status']}", flush=True)

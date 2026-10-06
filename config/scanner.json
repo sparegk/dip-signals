@@ -5,9 +5,10 @@
   "minimum_same_ticker_events": 20,
   "horizons": [1, 3, 5, 10, 20],
   "treasury": {
-    "source": "https://home.treasury.gov/resource-center-data-chart-center/interest-rates/pages/xml",
+    "source": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml",
     "series": "daily_treasury_bill_rates",
-    "field": "BC_13WEEKCE",
+    "field": "ROUND_B1_YIELD_13WK_2",
+    "date_field": "QUOTE_DATE",
     "maximum_age_calendar_days": 7,
     "method": "simple ACT/ACT calendar-day opportunity-cost proxy, decision-time yield held constant"
   },

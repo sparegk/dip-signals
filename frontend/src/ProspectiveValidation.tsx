@@ -91,6 +91,24 @@ export default function ProspectiveValidation({ data }: { data: Dashboard }) {
           />
         )}
       </Section>
+      <Section
+        title="Paper signal lifecycle"
+        note="Maturity counts only. Individual returns remain sealed."
+      >
+        <DataTable
+          caption="Prospective horizon maturity"
+          rows={[1, 3, 5, 10, 20].map((h) => ({
+            horizon: h,
+            completed: p.horizon_completion?.[String(h)] ?? 0,
+            pending: p.events - (p.horizon_completion?.[String(h)] ?? 0),
+          }))}
+          columns={[
+            { key: 'horizon', label: 'Bars' },
+            { key: 'completed', label: 'Completed horizons' },
+            { key: 'pending', label: 'Pending / unavailable' },
+          ]}
+        />
+      </Section>
       <Section title="Latest Paper Signals" note="Paper research only — no orders are placed.">
         {!p.genuine_records ? (
           <p>Prospective archive initialized — awaiting first eligible completed session.</p>

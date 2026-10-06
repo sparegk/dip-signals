@@ -95,7 +95,9 @@ export type Exp2 = {
   }
 }
 export type Dashboard = {
+  today?: import('./Today').TodayData | null
   prospective?: {
+    benchmark_review?: { reviewed_at: string; tables: Row[] } | null
     protocol: { effective_session: string; review_dates: string[] }
     requested_count: number
     days_collected: number
@@ -107,6 +109,7 @@ export type Dashboard = {
     incomplete_runs?: Row[]
     missing_sessions?: string[]
     completed_outcomes: number
+    horizon_completion?: Record<string, number>
     pending_outcomes: number
     scheduled_sessions: number
     complete_runs: number
@@ -115,6 +118,7 @@ export type Dashboard = {
     comparison: Row[]
     review?: { reviewed_at: string; forward: Row[]; paired_ev: Row } | null
     records: {
+      horizon_status?: Record<string, string>
       ticker: string
       session: string
       classification: string

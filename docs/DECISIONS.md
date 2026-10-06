@@ -1,5 +1,25 @@
 # Decisions
 
+## 2026-10-06 — Daily scanner extends the registered prospective system
+
+Preserve the original EXP-005 registration/hash and review gates. Register the
+operational extension before new collection; commit `4925d8b`. Correct the official
+Treasury endpoint/schema before live enrollment, based on the retained response
+and official feed documentation. This changes adapter metadata, not benchmark
+methodology or the research test.
+
+Historical references end before both the signal and EXP-005's start, with a
+20-completed-event per-horizon minimum. This prevents prospective outcome leakage
+through reference panels. Current snapshots outside the collection window are
+stored separately and never enrolled. All 95 names and failures remain visible.
+Use exact stock/SPY endpoints and actual-calendar-day cash accrual; never apply
+today's Treasury yield retrospectively as historical cash excess.
+
+Keep outcome performance sealed, including individual paper signals. Add immutable
+benchmark control sidecars and gated reviews. EXP-004's fold-specific winners cannot
+be presented as one current adaptive policy; show the descriptive exit envelope and
+an unavailable adaptive reference. Portfolio allocations require future registration.
+
 ## 2026-10-04 — EXP-005 prioritizes fresh evidence
 
 Freeze V1 and the existing 95-name universe. Compare the historical V1 exit

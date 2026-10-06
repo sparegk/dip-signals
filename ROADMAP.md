@@ -2,7 +2,7 @@
 
 - [x] EXP-004 dashboard comparisons and separate evidence scorecard
 - [x] Exploratory post-mortem, hypothesis registry and causal archive context foundation
-- [ ] Register an authorized EXP-005 prospective protocol with risk acceptance criteria
+- [x] Register an authorized EXP-005 prospective protocol with risk acceptance criteria
 - [ ] Prospective outcome evaluation at the existing review gates
 
 ## Foundation and research progression
@@ -28,8 +28,8 @@
 - [x] Predeclared causal SPY regime diagnostics (EXP-002)
 - [ ] ML ranking model
 - [ ] Historical signal archive
-- [ ] Forward paper-signal engine
-- [ ] Live scanner
+- [x] Forward paper-signal engine (manual, frozen protocol; outcomes sealed)
+- [x] Completed-session current-market scanner (manual; no intraday feed or scheduler)
 - [x] Local quantitative research dashboard and offline artifact adapter
 - [ ] Research API / hosted dashboard deployment
 - [ ] Notifications
@@ -44,6 +44,13 @@ Later milestones are research directions, not evidence of feasibility or an edge
 
 Infrastructure completion is not successful prospective validation. No scheduler,
 broker, new strategy or additional optimization was introduced.
+
+- [x] Today workstation, current candidates and component monitor
+- [x] Prior-only same-ticker/cross-sectional references and exit envelopes
+- [x] Decision-linked SPY/Treasury/control benchmark sidecars and gated review
+- [x] Daily collection status and complete archive/scanner verification tooling
+- [ ] Improve genuine all-name daily collection coverage without changing the universe
+- [ ] Separately register a portfolio protocol before allocated performance
 EXP-001 and EXP-002 are completed fixed-specification historical evaluations,
 not validated profitable strategies or allocated portfolio simulations. EXP-002
 uses 74 usable stocks from 95 requested current holdings; survivor selection and

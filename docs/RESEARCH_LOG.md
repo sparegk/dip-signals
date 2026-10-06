@@ -1,5 +1,23 @@
 # Research log
 
+## 2026-10-06 - Daily prospective research workstation
+
+- Registered additive EXP-005 scanner/benchmark protocol before acquisition in
+  `4925d8b`; original V1, universe, effective date and review gates stay frozen.
+- Added completed-session scanner, immutable status/snapshot sidecars, bounded
+  transient acquisition retries and full-universe failure reporting. Today is
+  default; Signals, Edge and candidate details use compact Python exports.
+- Historical references stop before EXP-005 began and require 20 completed events
+  per same-ticker horizon. Prior MAE/MFE quartiles, rebound timing and ATR describe
+  exit context; no single adaptive EXP-004 winner is invented.
+- Added retained official 13-week Treasury investment yields, actual-calendar-day
+  opportunity cost, separate event/control benchmark outcomes and gated reviews.
+  Official endpoint/schema verified before current collection; missing rates fail
+  explicitly. Portfolio registration remains future work.
+- Initial validation: 642 backend tests pass with warnings as errors; 21 frontend
+  tests pass, production build passes and pip check passes. Final live collection
+  and preservation verification are recorded in the completion entry below.
+
 ## 2026-10-04 — EXP-005 prospective infrastructure
 
 - Registered protocol `2bc12cc` before collection or outcome evaluation.

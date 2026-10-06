@@ -1,5 +1,12 @@
 # dip-signal-quant
 
+The default dashboard is **Today**: current completed-session V1 events, universe
+health, prior historical context, exit research envelopes and sealed prospective
+progress. Run `.\.venv\Scripts\python.exe -m scripts.run_today` from a clean
+revision. See [daily operation](docs/DAILY_RESEARCH.md) for collection windows,
+failure recovery, outcome attachment and verification. A current candidate is
+paper research, not a validated profitable trade.
+
 The local dashboard now includes **Exit Research**, **Research Diagnosis** and
 **Hypotheses**. It shows profit and downside together, including failed criteria
 and negative years. Read [the diagnosis](docs/RESEARCH_DIAGNOSIS.md) and

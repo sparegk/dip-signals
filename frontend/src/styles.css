@@ -1250,3 +1250,21 @@ details[open] > summary {
     height: 280px;
   }
 }
+.today-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px 24px;
+  margin: 20px 0;
+}
+.today-facts dt {
+  font-size: 12px;
+  color: var(--muted, #666);
+  margin-bottom: 6px;
+}
+.today-facts dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.signal-detail details p {
+  overflow-wrap: anywhere;
+}

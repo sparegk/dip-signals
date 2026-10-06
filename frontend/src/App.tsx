@@ -2,35 +2,38 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import { loadDashboard, type Dashboard, type Manifest } from './data'
 import { Empty } from './components'
 import Overview from './Overview'
+import Today, { Edge } from './Today'
 const Research = lazy(() => import('./ResearchRouter'))
 const Explorer = lazy(() => import('./Explorer'))
 const pages = [
-  'Overview',
+  'Today',
   'Signals',
-  'Signal Explorer',
+  'Edge',
   'Experiments',
   'Robustness',
   'Backtest',
-  'Exit Research',
-  'Research Diagnosis',
-  'Hypotheses',
-  'Prospective Validation',
   'Features',
   'Paper Archive',
   'Data Quality',
-  'Research Log',
+  'Research Diagnosis',
+  'Hypotheses',
   'Roadmap',
+  'Overview',
+  'Signal Explorer',
+  'Exit Research',
+  'Prospective Validation',
+  'Research Log',
 ]
 const slug = (name: string) => name.toLowerCase().replaceAll(' ', '-')
 
 export default function App() {
   const [loaded, setLoaded] = useState<{ manifest: Manifest; data: Dashboard } | null>(null)
   const [error, setError] = useState('')
-  const [route, setRoute] = useState(location.hash.slice(1) || 'overview')
+  const [route, setRoute] = useState(location.hash.slice(1) || 'today')
   const [menu, setMenu] = useState(false)
   useEffect(() => {
     const change = () => {
-      setRoute(location.hash.slice(1) || 'overview')
+      setRoute(location.hash.slice(1) || 'today')
       setMenu(false)
       window.scrollTo(0, 0)
     }
@@ -60,7 +63,7 @@ export default function App() {
         Skip to content
       </a>
       <aside className={`sidebar ${menu ? 'is-open' : ''}`} id="navigation">
-        <a className="brand" href="#overview">
+        <a className="brand" href="#today">
           <span className="brand-mark">d/</span>
           <div>
             DipSignal<small>RESEARCH TERMINAL</small>
@@ -119,7 +122,11 @@ export default function App() {
             </Empty>
           ) : loaded ? (
             <Suspense fallback={<p role="status">Loading research view…</p>}>
-              {page === 'overview' ? (
+              {page === 'today' || page === 'signals' ? (
+                <Today data={loaded.data} signalsOnly={page === 'signals'} />
+              ) : page === 'edge' ? (
+                <Edge data={loaded.data} />
+              ) : page === 'overview' ? (
                 <Overview data={loaded.data} />
               ) : page === 'signal-explorer' || page === 'features' ? (
                 <Explorer
