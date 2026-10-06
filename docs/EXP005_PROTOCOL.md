@@ -1,7 +1,76 @@
-# EXP-005 — prospective validation
+# EXP-005 — Prospective Market Scanner & Validation
 
 Registered before collection. Historical tuning is paused. No historical result
 is evidence for this experiment, and V1 is unchanged.
+
+## Operational extension registered 2026-10-06
+
+Research question: Does DipSignal identify current dip opportunities whose
+subsequent risk-adjusted behavior is better than reasonable alternatives?
+The original `config/exp005.json`, its hash, eligibility date, universe, V1,
+exit controls and review gates remain frozen. `config/scanner.json` registers
+an additive presentation/benchmark protocol before new collection or evaluation.
+No previously archived decision is relabeled or overwritten.
+
+Current Market Snapshot, Historical Reference and Prospective Evidence are
+distinct. A snapshot may be collected outside the prospective window, but is
+never enrolled then. Intraday bars are excluded; intraday context is explicitly
+unavailable unless a separate timestamped source is introduced. The collection
+window still starts at 00:15 New York, not immediately after the prior close.
+UTC is retained; operational display uses Europe/Athens with daylight saving.
+
+Decision fields retain all original four features, thresholds and components,
+readiness/condition/event, source vintage, code/config hashes and timestamps.
+Additive immutable scanner sidecars expose OHLCV, daily return, 20/60-bar
+drawdown, ATR, relative volume, SPY SMA200 regime and causal ATR tertiles.
+Expected next regular open is not an observed entry timestamp or fill.
+
+Historical reference calculations truncate inputs strictly before the earlier
+of the candidate session and 2026-10-05. Every full forward window must finish
+before this cutoff. This permanent pre-EXP-005 ceiling prevents reference pages
+from exposing sealed accumulating outcomes. Current adjusted historical vintages
+are not point-in-time historical prices. At least 20 completed same-ticker events
+are required **per horizon**; otherwise show insufficient history. Cross-sectional
+references are separate, use all available frozen requested names and disclose
+missing names, survivor selection, overlap and event dependence. Gross next-open
+to horizon-close returns, median, win rate, MFE/MAE and paired SPY excess are
+descriptive. Net historical V1 EV uses the frozen barrier engine and full ten-bar
+maturity, with the registered costs; it is not predicted profit.
+
+The Edge Monitor compares events, ready non-condition stock observations and
+all ready stock observations at 1/3/5/10/20 observed bars. SPY uses the exact
+stock entry and endpoint sessions. Report gross differences on matching metrics,
+and paired sample counts when SPY is missing. No pooled portfolio is implied.
+
+Treasury opportunity cost uses the official 13-week coupon-equivalent investment
+yield, retrieved and retained before the expected entry. Pick only a rate dated
+on/before the decision session, no older than seven calendar days. Missing,
+malformed, future or stale yields are unavailable; never substitute a rate.
+Retain the complete response, retrieval timestamp and digest. Approximate cash
+accrual is annual yield times the sum of actual calendar-day fractions (365/366
+in each calendar year). For ex-ante horizons use expected XNYS endpoint dates;
+for outcomes use actual stock endpoints. Entry-day to exit-day elapsed days,
+including weekends, are used; same-day horizon 1 has zero overnight accrual.
+This is a constant-yield opportunity-cost proxy, not an investable Treasury
+total-return simulation; it excludes bill mark-to-market, spreads and taxes.
+Current yield scenarios beside historical returns are not historical cash excess.
+
+Prospective stock/SPY/cash comparisons must use decision-linked, timely retained
+rates. Non-signal/unconditional controls require separate retained decisions and
+outcome vintages; missing controls remain unavailable. They cannot be reconstructed
+by selecting only surviving current candidates. All new performance remains
+sealed until the unchanged registered review gates permit inspection.
+
+Exit Research Envelope shows full-maturity prior ten-bar MAE/MFE quartiles,
+their descriptive magnitude ratio and prior twenty-bar time-to +2/+5/+10%
+including non-hits. ATR distance is a unit of volatility, not a recommended stop.
+EXP-004 selected different policies by historical fold; there is no single frozen
+prospective adaptive policy. Thus adaptive stop/target and outcome are unavailable
+until a separate advance policy registration. No new optimization occurs.
+
+Paper portfolio architecture requires an explicit future protocol covering
+allocation, overlap, capacity, cash, costs and timing before any equity curve,
+turnover or portfolio drawdown is presented. The scanner makes no allocations.
 
 ## Frozen comparison
 
